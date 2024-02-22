@@ -22,9 +22,9 @@ def get_password_length() -> int:
 
 def generate_password(psw_len: int) -> str:
     chars = string.ascii_letters + string.digits
-    psw = "".join(secrets.choice(chars) for _ in range(psw_len))
+    psw = ''.join(secrets.choice(chars) for _ in range(psw_len))
     return psw
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
