@@ -15,23 +15,22 @@ class Contact:
         if not name:
             raise ValueError('Creation failed. Contact must have a name.')
         self._name = name
+    
+    @classmethod
+    def get(cls, name, email):
+        """Returns a new Contact object, initialized from user input."""
 
+        name = input('Name: ').strip()
+        email = input('Email: ').strip()
+        try:
+            return cls(name, email)
+        except ValueError as err:
+            print(err)
 
 
 def main():
-    new_contact = get_contact()
+    new_contact = Contact.get()
     print(new_contact)
-
-
-def get_contact() -> Contact:
-    """Returns a new Contact object, initialized from user input."""
-
-    name = input('Name: ').strip()
-    email = input('Email: ').strip()
-    try:
-        return Contact(name, email)
-    except ValueError as err:
-        print(err)
 
 
 if __name__ == '__main__':
