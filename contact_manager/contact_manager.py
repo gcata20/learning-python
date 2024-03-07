@@ -1,12 +1,21 @@
 class Contact:
     def __init__(self, name: str, email: str) -> None:
-        if not name:
-            raise ValueError('Creation failed. Contact must have a name.')
         self.name = name
         self.email = email
 
     def __str__(self) -> str:
-        return f'Contact object associated with the name: {self.name}.'
+        return f'Contact object associated with the name: {self._name}.'
+    
+    @property
+    def name(self) -> str:
+        return self._name
+    
+    @name.setter
+    def name(self, name) -> None:
+        if not name:
+            raise ValueError('Creation failed. Contact must have a name.')
+        self._name = name
+
 
 
 def main():
