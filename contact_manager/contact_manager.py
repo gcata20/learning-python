@@ -1,10 +1,17 @@
+import re
+
+
 class Contact:
     def __init__(self, name: str, email: str) -> None:
         self.name = name
         self.email = email
 
     def __str__(self) -> str:
-        return f'Contact object associated with the name: {self._name}.'
+        return f"""
+            Contact object/instance.
+            Name: {self._name}
+            Email: {self._email}
+        """
     
     @property
     def name(self) -> str:
@@ -15,9 +22,20 @@ class Contact:
         if not name:
             raise ValueError('Creation failed. Contact must have a name.')
         self._name = name
+
+    @property
+    def email(self) -> str:
+        return self._email
+    
+    @email.setter
+    def email(self, email) -> None:
+        pattern = r'[^@]+@[^@]+'
+        if not re.fullmatch(pattern, email):
+            raise ValueError('Creation failed. Email not valid.')
+        self._email = email
     
     @classmethod
-    def get(cls, name, email):
+    def get(cls):
         """Returns a new Contact object, initialized from user input."""
 
         name = input('Name: ').strip()
