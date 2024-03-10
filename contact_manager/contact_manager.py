@@ -1,10 +1,10 @@
 from tabulate import tabulate
-import json
+# import json
 import re
 
 
 class Contact:
-    def __init__(self, name, email="", phone="", birthday="", note="") -> None:
+    def __init__(self, name, email='', phone='', birthday='', note='') -> None:
         self.name = name
         self.email = email
         self.phone = phone
@@ -12,7 +12,7 @@ class Contact:
         self.note = note
     
     def __str__(self) -> str:
-        s = tabulate([self.__dict__], headers="keys", tablefmt="simple_grid")
+        s = tabulate([self.__dict__], headers='keys', tablefmt='simple_grid')
         return s
     
     @property
@@ -22,7 +22,7 @@ class Contact:
     @name.setter
     def name(self, name) -> None:
         if not name:
-            raise ValueError('Creation failed. Contact must have a name.')
+            raise ValueError('Contact creation failed. Must provide a name.')
         self._name = name
 
     @property
@@ -33,7 +33,7 @@ class Contact:
     def email(self, email) -> None:
         pattern = r'[0-9a-zA-Z_\-\.]+@[^@]+'
         if not re.fullmatch(pattern, email):
-            raise ValueError('Creation failed. Email not valid.')
+            raise ValueError('Contact creation failed. Email not valid.')
         self._email = email
     
     @classmethod
