@@ -1,5 +1,4 @@
 from tabulate import tabulate
-# import json
 import re
 
 
@@ -32,9 +31,20 @@ class Contact:
     @email.setter
     def email(self, email) -> None:
         pattern = r'[0-9a-zA-Z_\-\.]+@[^@]+'
-        if not re.fullmatch(pattern, email):
+        if email and not re.fullmatch(pattern, email):
             raise ValueError('Contact creation failed. Email not valid.')
         self._email = email
+    
+    @property
+    def birthday(self) -> str:
+        return self._birthday
+    
+    @birthday.setter
+    def birthday(self, birthday) -> None:
+        pattern = r'\d{4}(?:-\d){2}'
+        if birthday and not re.fullmatch(pattern, birthday):
+            raise ValueError('Contact creation failed. Birthday not valid.')
+        self._birthday = birthday
     
     @classmethod
     def get(cls):
@@ -52,16 +62,8 @@ class Contact:
 
 
 def main():
-    # input_contacts = [
-    #     Contact('contact_1', 'name-1@fake-domain'),
-    #     Contact('contact_2', 'name-2@fake-domain', '0565146935'),
-    #     Contact('contact_3', 'name-3@fake-domain', '', '05-11-1956'),
-    #     Contact('contact_4', 'name-4@fake-domain', '', '', 'This is a note.')
-    # ]
-    # contacts_to_write = [con.__dict__ for con in input_contacts]
-    # with open('contacts.json', 'w') as f:
-    #     json.dump(contacts_to_write, f, indent=4)
-    ...
+    new_contact = Contact.get()
+    print(f'[Contact details]:\n{new_contact}')
 
 
 if __name__ == '__main__':
