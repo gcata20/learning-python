@@ -41,7 +41,7 @@ class Contact:
     
     @birthday.setter
     def birthday(self, birthday) -> None:
-        pattern = r'\d{4}(?:-\d){2}'
+        pattern = r'\d{4}(?:-\d{2}){2}'
         if birthday and not re.fullmatch(pattern, birthday):
             raise ValueError('Contact creation failed. Birthday not valid.')
         self._birthday = birthday
