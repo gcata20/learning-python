@@ -1,5 +1,6 @@
 from collections import defaultdict
 import os
+import shutil
 import sys
 
 
@@ -60,24 +61,39 @@ EXT_DICT = defaultdict(lambda: OTHER, EXTENSIONS)
 
 def main():
     print(
-        'Enter path to the folder you want to sort.'
+        'Enter path to the folder you want to sort.\n'
         '(Example: c:\\downloads)'
     )
-    target = get_target()
-    # result = sort(target)
-    # print(result)
+    source_folder = get_source()
+    sort(source_folder)
 
 
 # Custom functions.
-def get_target():
-    target = input('Path: ').strip()
-    if not os.path.exists(target):
+def get_source() -> str:
+    """Gets a folder path from user input and returns it."""
+
+    source_folder = input('Path: ').strip()
+    if not os.path.exists(source_folder):
         sys.exit('Path does not exist.')
-    return target
+    return source_folder
 
 
-def sort(target: str):
-    ...
+def sort(source_folder: str) -> None:
+    """Moves all files from source folder into categorized subfolders."""
+
+    files = os.listdir(source_folder)
+    for file in files:
+        current_file = os.path.join(source_folder, file)
+        file_extension = os.path.splitext(file)[1][1:]
+        file_category = EXT_DICT[file_extension]
+        target_folder = os.path.join(source_folder, file_category)
+        if not os.path.exists(target_folder):
+            os.makedirs(target_folder)
+        new_file = os.path.join(target_folder, file)
+        try:
+            shutil.move(current_file, new_file)
+        except Exception as e:
+            print(f'Error with file "{file}":', e)
 
 
 if __name__ == '__main__':
