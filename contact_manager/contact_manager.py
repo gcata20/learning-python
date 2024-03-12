@@ -1,5 +1,7 @@
 from tabulate import tabulate
+import os
 import re
+import sqlite3
 
 
 class Contact:
@@ -30,8 +32,8 @@ class Contact:
     
     @email.setter
     def email(self, email) -> None:
-        pattern = r'[0-9a-zA-Z_\-\.]+@[^@]+'
-        if email and not re.fullmatch(pattern, email):
+        email_pattern = r'[0-9a-zA-Z_\-\.]+@[^@]+'
+        if email and not re.fullmatch(email_pattern, email):
             raise ValueError('Contact creation failed. Email not valid.')
         self._email = email
     
@@ -41,8 +43,8 @@ class Contact:
     
     @birthday.setter
     def birthday(self, birthday) -> None:
-        pattern = r'\d{4}(?:-\d{2}){2}'
-        if birthday and not re.fullmatch(pattern, birthday):
+        bday_pattern = r'\d{4}(?:-\d{2}){2}'
+        if birthday and not re.fullmatch(bday_pattern, birthday):
             raise ValueError('Contact creation failed. Birthday not valid.')
         self._birthday = birthday
     
@@ -62,8 +64,88 @@ class Contact:
 
 
 def main():
+    # db = db_init()
     new_contact = Contact.get()
-    print(f'[Contact details]:\n{new_contact}')
+    print(
+        '[Contact details]:\n'
+        f'{new_contact}'
+    )
+
+    # add_query = """
+    #     INSERT INTO contacts (name, email, phone, birthday, note)
+    #     VALUES (?, ?, ?, ?, ?)
+    # """
+    # add_values = [
+    #     new_contact.name,
+    #     new_contact.email,
+    #     new_contact.phone,
+    #     new_contact.birthday,
+    #     new_contact.note
+    # ]
+    # db_query(db, add_query, *add_values)
+
+    # q = 'SELECT * FROM contacts WHERE name = ?'
+    # name = 'cow'
+    # row = db_query(db, q, name, fetch='one')
+    # print(row)
+    # print(tabulate([row], headers='keys', tablefmt='simple_grid'))
+
+
+# Custom functions.
+def db_init() -> str:
+    """Initializes a database file and returns it."""
+
+    db = 'data.db'
+    if not os.path.exists(db):
+        init_query = """
+            CREATE TABLE contacts (
+                id INTEGER PRIMARY KEY,
+                name TEXT UNIQUE,
+                email TEXT,
+                phone TEXT,
+                birthday TEXT,
+                note TEXT
+            )
+        """
+        db_query(db, init_query)
+    return db
+
+
+def db_query(db: str, query: str, *values, fetch=''):
+    """
+    Performs all db interactions:
+    - opens a connection and creates a cursor
+    - executes a query (with values if provided) and cathches errors
+    - commits any transactions where necessary
+    - closes the cursor and connection
+    - (optional) may return data using the fetch parameter:
+        - 'all': calls cursor.fetchall() and saves result as a list of dicts
+        - 'one': calls cursor.fetchone() and saves result as a dict
+    """
+
+    result = None
+    try:
+        conn = sqlite3.connect(db)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        cursor.execute(query, values)
+    except sqlite3.Error as err:
+        #TODO: Handle situations like when the user tried to create a contact with a name that exists already.
+        print('[DEBUG LOG (ERROR)]:', err)
+    else:
+        if any(word in query for word in ['CREATE', 'INSERT', 'UPDATE', 'DELETE']):
+            conn.commit()
+        match fetch.strip().lower():
+            case 'all':
+                if fetched_rows := cursor.fetchall():
+                    result = [dict(row) for row in fetched_rows]
+            case 'one':
+                if fetched_row := cursor.fetchone():
+                    result = dict(fetched_row)
+    finally:
+        cursor.close()
+        conn.close()
+        return result
 
 
 if __name__ == '__main__':
