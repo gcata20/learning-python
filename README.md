@@ -7,6 +7,8 @@ In January of 2024, I started learning Python by taking [CS50's Introduction to 
 ### Contact Manager
 - work in progress
 
+A convenient way to keep track of all your contact details. I started working on this project with the intention of learning more about OOP and encapsulate all contact-related functionality into a class.
+
 ### File Sorter
 Moves all files from a source folder into categorized subfolders. Input the folder you want sorted and the program will take care of the rest. It loops through each file, matches its extension to a category using a dictionary, creates a subfolder for that category (if one doesn't exist already) and moves the file there. Any files with unrecognized extensions will be moved into a separate subfolder.
 
