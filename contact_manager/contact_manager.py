@@ -23,7 +23,8 @@ class Contact:
     @name.setter
     def name(self, name) -> None:
         if not name:
-            raise ValueError('Contact creation failed. Must provide a name.')
+            name_error = 'Contact creation failed. Must provide a name.'
+            raise ValueError(name_error)
         self._name = name
 
     @property
@@ -34,7 +35,8 @@ class Contact:
     def email(self, email) -> None:
         email_pattern = r'[0-9a-zA-Z_\-\.]+@[^@]+'
         if email and not re.fullmatch(email_pattern, email):
-            raise ValueError('Contact creation failed. Email not valid.')
+            email_error = 'Contact creation failed. Email not valid.'
+            raise ValueError(email_error)
         self._email = email
     
     @property
@@ -45,7 +47,8 @@ class Contact:
     def birthday(self, birthday) -> None:
         bday_pattern = r'\d{4}(?:-\d{2}){2}'
         if birthday and not re.fullmatch(bday_pattern, birthday):
-            raise ValueError('Contact creation failed. Birthday not valid.')
+            bday_msg = 'Contact creation failed. Birthday not valid.'
+            raise ValueError(bday_msg)
         self._birthday = birthday
     
     @classmethod
@@ -60,16 +63,17 @@ class Contact:
         try:
             return cls(name, email, phone, birthday, note)
         except ValueError as err:
-            print(err)
+            print(f'[Error] {err}')
 
 
 def main():
     # db = db_init()
     new_contact = Contact.get()
-    print(
-        '[Contact details]:\n'
-        f'{new_contact}'
-    )
+
+    # print(
+    #     '[Contact details]:\n'
+    #     f'{new_contact}'
+    # )
 
     # add_query = """
     #     INSERT INTO contacts (name, email, phone, birthday, note)
