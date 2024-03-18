@@ -1,3 +1,4 @@
+from datetime import datetime
 from tabulate import tabulate
 import os
 import re
@@ -23,7 +24,7 @@ class Contact:
     @name.setter
     def name(self, name) -> None:
         if not name:
-            name_error = 'Contact creation failed. Must provide a name.'
+            name_error = '[Error]: Contact creation failed. Must provide a name.'
             raise ValueError(name_error)
         self._name = name
 
@@ -35,7 +36,7 @@ class Contact:
     def email(self, email) -> None:
         email_pattern = r'[0-9a-zA-Z_\-\.]+@[^@]+'
         if email and not re.fullmatch(email_pattern, email):
-            email_error = 'Contact creation failed. Email not valid.'
+            email_error = '[Error]: Contact creation failed. Email not valid.'
             raise ValueError(email_error)
         self._email = email
     
@@ -46,9 +47,16 @@ class Contact:
     @birthday.setter
     def birthday(self, birthday) -> None:
         bday_pattern = r'\d{4}(?:-\d{2}){2}'
-        if birthday and not re.fullmatch(bday_pattern, birthday):
-            bday_msg = 'Contact creation failed. Birthday not valid.'
-            raise ValueError(bday_msg)
+        if birthday:
+            if not re.fullmatch(bday_pattern, birthday):
+                invalid_error = '[Error]: Contact creation failed. Invalid birthday input.'
+                raise ValueError(invalid_error)
+            year, month, day = map(int, birthday.split('-'))
+            try:
+                datetime(year, month, day)
+            except ValueError:
+                inexistent_error = '[Error]: Contact creation failed. Birthday date does not exist.'
+                raise ValueError(inexistent_error)
         self._birthday = birthday
     
     @classmethod
@@ -63,31 +71,37 @@ class Contact:
         try:
             return cls(name, email, phone, birthday, note)
         except ValueError as err:
-            print(f'[Error] {err}')
+            print(f'[Error]: {err}')
 
 
 def main():
-    # db = db_init()
+    # ----- Initialize the database.
+    db = db_init()
+
+    # ----- Create a new contact from user input.
     new_contact = Contact.get()
 
-    # print(
-    #     '[Contact details]:\n'
-    #     f'{new_contact}'
-    # )
+    # ----- Print contact details using tabulate.
+    print(
+        '[Contact details]:\n'
+        f'{new_contact}'
+    )
 
+    # ----- Add a newly created contact to the db.
     # add_query = """
     #     INSERT INTO contacts (name, email, phone, birthday, note)
     #     VALUES (?, ?, ?, ?, ?)
     # """
     # add_values = [
-    #     new_contact.name,
-    #     new_contact.email,
+    #     new_contact._name,
+    #     new_contact._email,
     #     new_contact.phone,
-    #     new_contact.birthday,
+    #     new_contact._birthday,
     #     new_contact.note
     # ]
     # db_query(db, add_query, *add_values)
 
+    # ----- Fetch a single row by name from the db.
     # q = 'SELECT * FROM contacts WHERE name = ?'
     # name = 'cow'
     # row = db_query(db, q, name, fetch='one')
@@ -104,7 +118,7 @@ def db_init() -> str:
         init_query = """
             CREATE TABLE contacts (
                 id INTEGER PRIMARY KEY,
-                name TEXT UNIQUE,
+                name TEXT UNIQUE COLLATE NOCASE,
                 email TEXT,
                 phone TEXT,
                 birthday TEXT,
@@ -119,23 +133,27 @@ def db_query(db: str, query: str, *values, fetch=''):
     """
     Performs all db interactions:
     - opens a connection and creates a cursor
-    - executes a query (with values if provided) and cathches errors
+    - executes a query (with values if provided) and catches errors
     - commits any transactions where necessary
     - closes the cursor and connection
     - (optional) may return data using the fetch parameter:
         - 'all': calls cursor.fetchall() and saves result as a list of dicts
         - 'one': calls cursor.fetchone() and saves result as a dict
+        - '': default, does nothing
+        - any other value will raise a SyntaxError
     """
 
     result = None
+    conn = sqlite3.connect(db)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
     try:
-        conn = sqlite3.connect(db)
-        conn.row_factory = sqlite3.Row
-        cursor = conn.cursor()
         cursor.execute(query, values)
-    except sqlite3.Error as err:
-        #TODO: Handle situations like when the user tried to create a contact with a name that exists already.
-        print('[DEBUG LOG (ERROR)]:', err)
+    except sqlite3.IntegrityError as e:
+        integrity_error = str(e)
+        if integrity_error == 'UNIQUE constraint failed: contacts.name':
+            unique_name_error = '[Error]: A contact with that name already exists.'
+            print(unique_name_error)
     else:
         if any(word in query for word in ['CREATE', 'INSERT', 'UPDATE', 'DELETE']):
             conn.commit()
@@ -146,10 +164,15 @@ def db_query(db: str, query: str, *values, fetch=''):
             case 'one':
                 if fetched_row := cursor.fetchone():
                     result = dict(fetched_row)
+            case '':
+                pass
+            case _:
+                fetch_error = 'Wrong use of the db_query fetch parameter.'
+                raise SyntaxError(fetch_error)
     finally:
         cursor.close()
         conn.close()
-        return result
+    return result
 
 
 if __name__ == '__main__':
