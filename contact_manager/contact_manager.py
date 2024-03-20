@@ -3,6 +3,7 @@ from tabulate import tabulate
 import os
 import re
 import sqlite3
+import sys
 
 
 class Contact:
@@ -75,38 +76,8 @@ class Contact:
 
 
 def main():
-    # ----- Initialize the database.
     db = db_init()
-
-    # ----- Create a new contact from user input.
-    new_contact = Contact.get()
-
-    # ----- Print contact details using tabulate.
-    print(
-        '[Contact details]:\n'
-        f'{new_contact}'
-    )
-
-    # ----- Add a newly created contact to the db.
-    # add_query = """
-    #     INSERT INTO contacts (name, email, phone, birthday, note)
-    #     VALUES (?, ?, ?, ?, ?)
-    # """
-    # add_values = [
-    #     new_contact._name,
-    #     new_contact._email,
-    #     new_contact.phone,
-    #     new_contact._birthday,
-    #     new_contact.note
-    # ]
-    # db_query(db, add_query, *add_values)
-
-    # ----- Fetch a single row by name from the db.
-    # q = 'SELECT * FROM contacts WHERE name = ?'
-    # name = 'cow'
-    # row = db_query(db, q, name, fetch='one')
-    # print(row)
-    # print(tabulate([row], headers='keys', tablefmt='simple_grid'))
+    main_menu(db)
 
 
 # Custom functions.
@@ -173,6 +144,113 @@ def db_query(db: str, query: str, *values, fetch=''):
         cursor.close()
         conn.close()
     return result
+
+
+def main_menu(db: str):
+    """Main menu loop for accessing the app's main features."""
+
+    show_options('main')
+
+    while True:
+        match input('-> ').strip().lower():
+            case '1':
+                #TODO: Show all contacts.
+                ...
+            case '2':
+                #TODO: Show matching contacts based on input.
+                ...
+            case '3':
+                #TODO: Create a new contact.
+                ...
+            case '4':
+                #TODO: Modify existing contact by calling mod menu with contact id.
+                ...
+            case 'm':
+                show_options('main')
+            case 'x':
+                print('Adios.')
+                sys.exit(0)
+            case _:
+                invalid_choice_msg = 'Invalid choice. Type m to show main menu options.'
+                print(invalid_choice_msg)
+
+
+def mod_menu(db: str, id: str):
+    """Mod menu loop for modifying contact details."""
+
+    show_options('mod')
+
+    while True:
+        match input('-> ').strip().lower():
+            case '1':
+                #TODO: Show contact's current status.
+                ...
+            case '2':
+                #TODO: Change contact's name.
+                ...
+            case '3':
+                #TODO: Change contact's email.
+                ...
+            case '4':
+                #TODO: Change contact's phone number.
+                ...
+            case '5':
+                #TODO: Change contact's birthday.
+                ...
+            case '6':
+                #TODO: CHange contact's note.
+                ...
+            case '7':
+                #TODO: Delete contact.
+                ...
+            case '8':
+                #TODO: Go back to the main menu.
+                ...
+            case 'm':
+                show_options('mod')
+            case 'x':
+                print('Adios.')
+                sys.exit(0)
+            case _:
+                invalid_choice_msg = 'Invalid choice. Type m to show modify menu options.'
+                print(invalid_choice_msg)
+
+
+def show_options(menu: str):
+    """
+    Prints a text-based UI menu with options.
+    
+    Choices for the menu parameter:
+    - 'main' = main menu
+    - 'mod' = modify contact menu
+    - any other value will raise a SyntaxError
+    """
+
+    if menu == 'main':
+        print(
+            '───── [ Main Menu ] ─────\n'
+            '[1] Show All Contacts\n'
+            '[2] Search for Contact(s)\n'
+            '[3] Create New Contact\n'
+            '[4] Modify Contact\n'
+            '[x] Exit'
+        )
+    elif menu == 'mod':
+        print(
+            '───── [ Modify Contact Menu ] ─────\n'
+            '[1] Show Current Status\n'
+            '[2] Change Name\n'
+            '[3] Change Email\n'
+            '[4] Change Phone Number\n'
+            '[5] Change Birthday'
+            '[6] Change Note'
+            '[7] Delete Contact\n'
+            '[8] Back to Main Menu\n'
+            '[x] Exit'
+        )
+    else:
+        error_msg = 'Invalid use of the show_options menu parameter.'
+        raise SyntaxError(error_msg)
 
 
 if __name__ == '__main__':
