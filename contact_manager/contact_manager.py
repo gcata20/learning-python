@@ -25,7 +25,7 @@ class Contact:
     @name.setter
     def name(self, name) -> None:
         if not name:
-            name_error = '[Error]: Contact creation failed. Must provide a name.'
+            name_error = 'Contact creation failed. Must provide a name.'
             raise ValueError(name_error)
         self._name = name
 
@@ -37,7 +37,7 @@ class Contact:
     def email(self, email) -> None:
         email_pattern = r'[0-9a-zA-Z_\-\.]+@[^@]+'
         if email and not re.fullmatch(email_pattern, email):
-            email_error = '[Error]: Contact creation failed. Email not valid.'
+            email_error = 'Contact creation failed. Email not valid.'
             raise ValueError(email_error)
         self._email = email
     
@@ -50,15 +50,18 @@ class Contact:
         bday_pattern = r'\d{4}(?:-\d{2}){2}'
         if birthday:
             if not re.fullmatch(bday_pattern, birthday):
-                invalid_error = '[Error]: Contact creation failed. Invalid birthday input.'
+                invalid_error = 'Contact creation failed. Invalid birthday input.'
                 raise ValueError(invalid_error)
             year, month, day = map(int, birthday.split('-'))
             try:
                 datetime(year, month, day)
             except ValueError:
-                inexistent_error = '[Error]: Contact creation failed. Birthday date does not exist.'
+                inexistent_error = 'Contact creation failed. Birthday date does not exist.'
                 raise ValueError(inexistent_error)
         self._birthday = birthday
+
+    def get_details(self):
+        return [self._name, self._email, self.phone, self._birthday, self.note]
     
     @classmethod
     def get(cls):
@@ -154,14 +157,38 @@ def main_menu(db: str):
     while True:
         match input('-> ').strip().lower():
             case '1':
-                #TODO: Show all contacts.
-                ...
+                all_query = """
+                    SELECT name, email, phone, birthday, note
+                    FROM contacts
+                    ORDER BY LOWER (name)
+                """
+                if results := db_query(db, all_query, fetch='all'):
+                    print(tab(results))
+                else:
+                    no_contacts_msg = 'Database is empty. Get started by creating a new contact.'
+                    print(no_contacts_msg)
             case '2':
-                #TODO: Show matching contacts based on input.
-                ...
+                search = '%' + input('Search for: ').strip().lower() + '%'
+                matching_query = """
+                    SELECT name, email, phone, birthday, note
+                    FROM contacts
+                    WHERE LOWER (name) LIKE ?
+                    ORDER BY LOWER (name)
+                """
+                if results := db_query(db, matching_query, search, fetch='all'):
+                    print(tab(results))
+                else:
+                    no_matches_msg = 'No matches found.'
+                    print(no_matches_msg)
             case '3':
-                #TODO: Create a new contact.
-                ...
+                new_contact = Contact.get()
+                if new_contact:
+                    create_query = """
+                        INSERT INTO contacts (name, email, phone, birthday, note)
+                        VALUES (?, ?, ?, ?, ?)
+                    """
+                    db_query(db, create_query, *new_contact.get_details())
+                        
             case '4':
                 #TODO: Modify existing contact by calling mod menu with contact id.
                 ...
@@ -251,6 +278,12 @@ def show_options(menu: str):
     else:
         error_msg = 'Invalid use of the show_options menu parameter.'
         raise SyntaxError(error_msg)
+
+
+def tab(data: list[dict]):
+    """Uses the tabulate module to return a table-like string for printing."""
+
+    return tabulate(data, headers='keys', tablefmt='simple_grid')
 
 
 if __name__ == '__main__':
