@@ -11,9 +11,10 @@ With the course completed, I wanted to delve deeper into Python by coding a few 
 
 Keeps track of all your contact details. Each contact must have a unique name, everything else can be left blank or filled in with your desired input. Emails and birthdays are checked for validity using regular expressions. Birthdays are also checked to see if the dates exist using the datetime module.
 - **email pattern**: *name@domain*
-  - **name**: one or more characters (lower and uppercase), digits, underscores, dashes and dots
+  - **name**: one or more letters (lower and uppercase), digits, underscores, dashes and dots
   - **domain**: one or more characters of any kind except for @
 - **birthday pattern**: *YYYY-MM-DD*
+  - use leading zeroes for single-digit days or months (example: 1985-01-09) 
 
 ### **File Sorter**
 Moves all files from a source folder into categorized subfolders. Input the folder you want sorted and the program will take care of the rest. It loops through each file, matches its extension to a category using a dictionary, creates a subfolder for that category (if one doesn't exist already) and moves the file there. Any files with unrecognized extensions will be moved into a separate subfolder.
