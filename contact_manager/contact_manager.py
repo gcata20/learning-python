@@ -7,7 +7,7 @@ import sys
 
 
 class Contact:
-    def __init__(self, name, email='', phone='', birthday='', note='') -> None:
+    def __init__(self, name, email='', phone='', birthday='', note=''):
         self.name = name
         self.email = email
         self.phone = phone
@@ -15,7 +15,7 @@ class Contact:
         self.note = note
     
     def __str__(self) -> str:
-        s = tabulate([self.__dict__], headers='keys', tablefmt='simple_grid')
+        s = tab([self.__dict__])
         return s
     
     @property
@@ -25,7 +25,7 @@ class Contact:
     @name.setter
     def name(self, name) -> None:
         if not name:
-            name_error = 'Contact creation failed. Must provide a name.'
+            name_error = 'Must provide a name.'
             raise ValueError(name_error)
         self._name = name
 
@@ -37,7 +37,7 @@ class Contact:
     def email(self, email) -> None:
         email_pattern = r'[0-9a-zA-Z_\-\.]+@[^@]+'
         if email and not re.fullmatch(email_pattern, email):
-            email_error = 'Contact creation failed. Email not valid.'
+            email_error = 'Email not valid.'
             raise ValueError(email_error)
         self._email = email
     
@@ -50,13 +50,13 @@ class Contact:
         bday_pattern = r'\d{4}(?:-\d{2}){2}'
         if birthday:
             if not re.fullmatch(bday_pattern, birthday):
-                invalid_error = 'Contact creation failed. Invalid birthday input.'
+                invalid_error = 'Invalid birthday input.'
                 raise ValueError(invalid_error)
             year, month, day = map(int, birthday.split('-'))
             try:
                 datetime(year, month, day)
             except ValueError:
-                inexistent_error = 'Contact creation failed. Birthday date does not exist.'
+                inexistent_error = 'Birthday date does not exist.'
                 raise ValueError(inexistent_error)
         self._birthday = birthday
 
@@ -64,7 +64,7 @@ class Contact:
         return [self._name, self._email, self.phone, self._birthday, self.note]
     
     @classmethod
-    def get(cls):
+    def create(cls):
         """Returns a new Contact object, initialized from user input."""
 
         name = input('Name: ').strip()
@@ -181,17 +181,24 @@ def main_menu(db: str):
                     no_matches_msg = 'No matches found.'
                     print(no_matches_msg)
             case '3':
-                new_contact = Contact.get()
+                new_contact = Contact.create()
                 if new_contact:
                     create_query = """
                         INSERT INTO contacts (name, email, phone, birthday, note)
                         VALUES (?, ?, ?, ?, ?)
                     """
-                    db_query(db, create_query, *new_contact.get_details())
-                        
+                    db_query(db, create_query, *new_contact.get_details()) 
             case '4':
-                #TODO: Modify existing contact by calling mod menu with contact id.
-                ...
+                selected_contact = input('Name of contact to modify: ').strip().lower()
+                contact_query = """
+                    SELECT *
+                    FROM contacts
+                    WHERE name = ?
+                """
+                if contact_row := db_query(db, contact_query, selected_contact, fetch='one'):
+                    mod_menu(db, contact_row)
+                else:
+                    print('Contact not found.')
             case 'm':
                 show_options('main')
             case 'x':
@@ -202,37 +209,96 @@ def main_menu(db: str):
                 print(invalid_choice_msg)
 
 
-def mod_menu(db: str, id: str):
+def mod_menu(db: str, contact_row: dict):
     """Mod menu loop for modifying contact details."""
+
+    contact_list = list(contact_row.values())
+    contact_id = contact_list[0]
+    contact_details = contact_list[1:]
+    selected_contact = Contact(*contact_details)
 
     show_options('mod')
 
     while True:
         match input('-> ').strip().lower():
             case '1':
-                #TODO: Show contact's current status.
-                ...
+                show_current_query = """
+                    SELECT name, email, phone, birthday, note
+                    FROM contacts
+                    WHERE id = ?
+                """
+                selected_contact_row = db_query(db, show_current_query, contact_id, fetch='one')
+                print(tab([selected_contact_row]))
             case '2':
-                #TODO: Change contact's name.
-                ...
+                input_name = input('New name: ').strip()
+                try:
+                    selected_contact.name = input_name
+                except ValueError:
+                    continue
+                else:
+                    mod_name_query = """
+                        UPDATE contacts
+                        SET name = ?
+                        WHERE id = ?
+                    """
+                    try:
+                        db_query(db, mod_name_query, selected_contact.name, contact_id)
+                    except ValueError:
+                        continue
             case '3':
-                #TODO: Change contact's email.
-                ...
+                input_email = input('New email: ').strip()
+                try:
+                    selected_contact.email = input_email
+                except ValueError as e:
+                    print(f'[Error]: {e}')
+                    continue
+                else:
+                    mod_email_query = """
+                        UPDATE contacts
+                        SET email = ?
+                        WHERE id = ?
+                    """
+                    db_query(db, mod_email_query, selected_contact.email, contact_id)
             case '4':
-                #TODO: Change contact's phone number.
-                ...
+                input_phone = input('New phone: ').strip()
+                selected_contact.phone = input_phone
+                mod_phone_query = """
+                    UPDATE contacts
+                    SET phone = ?
+                    WHERE id = ?
+                """
+                db_query(db, mod_phone_query, selected_contact.phone, contact_id)
             case '5':
-                #TODO: Change contact's birthday.
-                ...
+                input_bday = input('New birthday: ').strip()
+                try:
+                    selected_contact.birthday = input_bday
+                except ValueError as e:
+                    print(f'[Error]: {e}')
+                    continue
+                else:
+                    mod_bday_query = """
+                        UPDATE contacts
+                        SET birthday = ?
+                        WHERE id = ?
+                    """
+                    db_query(db, mod_bday_query, selected_contact.birthday, contact_id)
             case '6':
-                #TODO: CHange contact's note.
-                ...
+                input_note = input('New note: ').strip()
+                selected_contact.note = input_note
+                mod_note_query = """
+                    UPDATE contacts
+                    SET note = ?
+                    WHERE id = ?
+                """
+                db_query(db, mod_note_query, selected_contact.note, contact_id)
             case '7':
-                #TODO: Delete contact.
-                ...
+                delete_query = 'DELETE FROM contacts WHERE id = ?'
+                db_query(db, delete_query, contact_id)
+                print('Contact deleted.')
+                return
             case '8':
-                #TODO: Go back to the main menu.
-                ...
+                show_options('main')
+                return
             case 'm':
                 show_options('mod')
             case 'x':
@@ -269,8 +335,8 @@ def show_options(menu: str):
             '[2] Change Name\n'
             '[3] Change Email\n'
             '[4] Change Phone Number\n'
-            '[5] Change Birthday'
-            '[6] Change Note'
+            '[5] Change Birthday\n'
+            '[6] Change Note\n'
             '[7] Delete Contact\n'
             '[8] Back to Main Menu\n'
             '[x] Exit'
