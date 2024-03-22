@@ -168,7 +168,7 @@ def main_menu(db: str):
                     no_contacts_msg = 'Database is empty. Get started by creating a new contact.'
                     print(no_contacts_msg)
             case '2':
-                search = '%' + input('Search for: ').strip().lower() + '%'
+                search = '%' + input('Search for (name): ').strip().lower() + '%'
                 matching_query = """
                     SELECT name, email, phone, birthday, note
                     FROM contacts
@@ -220,7 +220,8 @@ def mod_menu(db: str, contact_row: dict):
     show_options('mod')
 
     while True:
-        match input('-> ').strip().lower():
+        mod_menu_input = input('-> ').strip().lower()
+        match mod_menu_input:
             case '1':
                 show_current_query = """
                     SELECT name, email, phone, birthday, note
@@ -229,68 +230,42 @@ def mod_menu(db: str, contact_row: dict):
                 """
                 selected_contact_row = db_query(db, show_current_query, contact_id, fetch='one')
                 print(tab([selected_contact_row]))
-            case '2':
-                input_name = input('New name: ').strip()
-                try:
-                    selected_contact.name = input_name
-                except ValueError:
-                    continue
-                else:
-                    mod_name_query = """
-                        UPDATE contacts
-                        SET name = ?
-                        WHERE id = ?
-                    """
+            case '2' | '3' | '4' | '5' | '6':
+                columns = {'2': 'name', '3': 'email', '4': 'phone', '5': 'birthday', '6': 'note'}
+                new_value = input(f'New value for {columns[mod_menu_input]}: ').strip()
+                mod_query = f'UPDATE contacts SET {columns[mod_menu_input]} = ? WHERE id = ?'
+                if mod_menu_input == '2':
                     try:
-                        db_query(db, mod_name_query, selected_contact.name, contact_id)
+                        selected_contact.name = new_value
                     except ValueError:
                         continue
-            case '3':
-                input_email = input('New email: ').strip()
-                try:
-                    selected_contact.email = input_email
-                except ValueError as e:
-                    print(f'[Error]: {e}')
-                    continue
-                else:
-                    mod_email_query = """
-                        UPDATE contacts
-                        SET email = ?
-                        WHERE id = ?
-                    """
-                    db_query(db, mod_email_query, selected_contact.email, contact_id)
-            case '4':
-                input_phone = input('New phone: ').strip()
-                selected_contact.phone = input_phone
-                mod_phone_query = """
-                    UPDATE contacts
-                    SET phone = ?
-                    WHERE id = ?
-                """
-                db_query(db, mod_phone_query, selected_contact.phone, contact_id)
-            case '5':
-                input_bday = input('New birthday: ').strip()
-                try:
-                    selected_contact.birthday = input_bday
-                except ValueError as e:
-                    print(f'[Error]: {e}')
-                    continue
-                else:
-                    mod_bday_query = """
-                        UPDATE contacts
-                        SET birthday = ?
-                        WHERE id = ?
-                    """
-                    db_query(db, mod_bday_query, selected_contact.birthday, contact_id)
-            case '6':
-                input_note = input('New note: ').strip()
-                selected_contact.note = input_note
-                mod_note_query = """
-                    UPDATE contacts
-                    SET note = ?
-                    WHERE id = ?
-                """
-                db_query(db, mod_note_query, selected_contact.note, contact_id)
+                    else:
+                        try:
+                            db_query(db, mod_query, selected_contact.name, contact_id)
+                        except ValueError:
+                            continue
+                if mod_menu_input == '3':
+                    try:
+                        selected_contact.email = new_value
+                    except ValueError as e:
+                        print(f'[Error]: {e}')
+                        continue
+                    else:
+                        db_query(db, mod_query, selected_contact.email, contact_id)
+                if mod_menu_input == '4':
+                    selected_contact.phone = new_value
+                    db_query(db, mod_query, selected_contact.phone, contact_id)
+                if mod_menu_input == '5':
+                    try:
+                        selected_contact.birthday = new_value
+                    except ValueError as e:
+                        print(f'[Error]: {e}')
+                        continue
+                    else:
+                        db_query(db, mod_query, selected_contact.birthday, contact_id)
+                if mod_menu_input == '6':
+                    selected_contact.note = new_value
+                    db_query(db, mod_query, selected_contact.note, contact_id)
             case '7':
                 delete_query = 'DELETE FROM contacts WHERE id = ?'
                 db_query(db, delete_query, contact_id)
