@@ -7,6 +7,10 @@ With the course completed, I wanted to delve deeper into Python by coding a few 
 
 # **Projects**
 
+### **Bagels**
+A game written by Al Sweigart (al@inventwithpython.com). I started reading *The Big Book of Small Python Projects* and immediately wanted to give it a try. This project is my attempt at coding the game from the following description, quoted from the book:
+> In Bagels, a deductive logic game, you must guess a secret three-digit number based on clues. The game offers one of the following hints in response to your guess: “Pico” when your guess has a correct digit in the wrong place, “Fermi” when your guess has a correct digit in the correct place, and “Bagels” if your guess has no correct digits. You have 10 tries to guess the secret number.
+
 ### **Contact Manager**
 
 Keeps track of all your contact details. Each contact must have a unique name, everything else can be left blank or filled in with your desired input. Emails and birthdays are checked for validity using regular expressions. Birthdays are also checked to see if the dates exist using the datetime module.
