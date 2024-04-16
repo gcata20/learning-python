@@ -28,3 +28,8 @@ The popular game, reimagined as a Python exercise. Play however many games you w
 
 ### **Password Generator**
 Generates random passwords. Input your desired length and watch the magic happen. The passwords contain both lowercase and uppercase letters as well as digits. It can easily be modified to include any other special characters you may want for extra security.
+
+### **Pazaak**
+- work in progress...
+
+Pazaak is a card game in the Star Wars universe, similar to Blackjack, where players aim to reach a score of 20 without going over. What makes it stand out is that competitors may also choose to play cards from their own hand to manipulate the total value of the cards on the table, thus introducing more chance and strategy to the game.
