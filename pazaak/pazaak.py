@@ -53,37 +53,45 @@ class Competitor:
 
 
 class DeckBuilder:
-    chosen_cards = []
+    chosen_cards = [None] * 10
+
+    @classmethod
+    def clear_deck(cls):
+        cls.chosen_cards = [None] * 10
+        for button in ui.chosen_card_buttons:
+            button.setIcon(QIcon())
+            button.setEnabled(False)
+        print(cls.chosen_cards)
 
     @classmethod
     def gen_random_deck(cls):
         ...
     
     @classmethod
-    def modify_deck(cls, card_buttons):
-        button_name = ui.sender().objectName()
-        mod, num = button_name.split('_')[-2:]
-        mod = MOD_DICT[mod]
-        card_value = mod + num
-
-        print(card_buttons)
-
-        if 'card' in button_name and len(cls.chosen_cards) < 10:
-            cls.chosen_cards.append({'button': button_name,
-                                     'card_value': card_value})
+    def modify_deck(cls):
+        sender = ui.sender()
+        sender_name = sender.objectName()
+        if 'card' in sender_name:
             for button in ui.chosen_card_buttons:
                 if not button.isEnabled():
-                    # Enable it.
-                    # Set its icon.
+                    mod, num = sender_name.split('_')[-2:]
+                    mod = MOD_DICT[mod]
+                    card_value = mod + num
+                    card_to_update = {'button': sender_name,
+                                      'card_value': card_value}
+                    index_to_modify = int(button.objectName()[-1]) - 1
+                    cls.chosen_cards[index_to_modify] = card_to_update
+                    card_name = sender_name.lstrip('btn_')
+                    icon_path = f'assets/{card_name}.png'
+                    button.setEnabled(True)
+                    button.setIcon(QIcon(icon_path))
                     break
-        elif 'chosen' in button_name:
-            for item in cls.chosen_cards:
-                if item['button'] == button_name:
-                    cls.chosen_cards.remove(item)
-                    break
-            # TODO: Disable button based on the ui.sender()
-            # Remove its icon.
-            # Disable it.
+        elif 'chosen' in sender_name:
+            index_to_modify = int(sender_name[-1]) - 1
+            cls.chosen_cards[index_to_modify] = None
+            sender.setIcon(QIcon())
+            sender.setEnabled(False)
+        print(cls.chosen_cards)
 
 
 class Game:
@@ -120,6 +128,7 @@ class Pazaak(QtWidgets.QMainWindow):
         self.ui.btn_deck_to_main.clicked.connect(self.go_to_main)
         self.ui.btn_start_match.clicked.connect(self.start_match)
         self.ui.btn_quit_match.clicked.connect(self.go_to_main)
+        self.ui.btn_clear.clicked.connect(DeckBuilder.clear_deck)
 
         available_card_buttons = [self.ui.btn_card_plus_1, self.ui.btn_card_plus_2,
                                   self.ui.btn_card_plus_3, self.ui.btn_card_plus_4,
@@ -150,8 +159,7 @@ class Pazaak(QtWidgets.QMainWindow):
         # TODO: Logic for starting a new game from the main menu.
         # - reset deck builder:
         #   - disable start button
-        #   - disable chosen cards buttons (and clear their pixmaps)
-        #   - empty the chosen cards list (call the same function that the clear button uses)
+        DeckBuilder.clear_deck()
         self.ui.stacked_widget.setCurrentIndex(2)
 
     def start_match(self):
