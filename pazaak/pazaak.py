@@ -77,10 +77,8 @@ class DeckBuilder:
                     mod, num = sender_name.split('_')[-2:]
                     mod = MOD_DICT[mod]
                     card_value = mod + num
-                    card_to_update = {'button': sender_name,
-                                      'card_value': card_value}
                     index_to_modify = int(button.objectName()[-1]) - 1
-                    cls.chosen_cards[index_to_modify] = card_to_update
+                    cls.chosen_cards[index_to_modify] = card_value
                     card_name = sender_name.lstrip('btn_')
                     icon_path = f'assets/{card_name}.png'
                     button.setEnabled(True)
@@ -91,7 +89,7 @@ class DeckBuilder:
             cls.chosen_cards[index_to_modify] = None
             sender.setIcon(QIcon())
             sender.setEnabled(False)
-        print(cls.chosen_cards)
+        print('Current side deck:', cls.chosen_cards)
 
 
 class Game:
