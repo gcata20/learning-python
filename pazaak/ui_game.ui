@@ -272,9 +272,9 @@ background-color: rgba(255, 255, 255, 0);</string>
      <widget class="QLabel" name="name_pazaak">
       <property name="geometry">
        <rect>
-        <x>430</x>
-        <y>20</y>
-        <width>221</width>
+        <x>412</x>
+        <y>30</y>
+        <width>200</width>
         <height>81</height>
        </rect>
       </property>
@@ -286,13 +286,16 @@ background-color: rgba(255, 255, 255, 0);</string>
       <property name="text">
        <string>Pazaak</string>
       </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
      </widget>
      <widget class="QPushButton" name="btn_play">
       <property name="geometry">
        <rect>
-        <x>360</x>
+        <x>412</x>
         <y>210</y>
-        <width>211</width>
+        <width>200</width>
         <height>71</height>
        </rect>
       </property>
@@ -308,9 +311,9 @@ background-color: rgba(255, 255, 255, 0);</string>
      <widget class="QPushButton" name="btn_help">
       <property name="geometry">
        <rect>
-        <x>410</x>
+        <x>412</x>
         <y>310</y>
-        <width>211</width>
+        <width>200</width>
         <height>71</height>
        </rect>
       </property>
@@ -326,9 +329,9 @@ background-color: rgba(255, 255, 255, 0);</string>
      <widget class="QPushButton" name="btn_quit_game">
       <property name="geometry">
        <rect>
-        <x>520</x>
+        <x>412</x>
         <y>410</y>
-        <width>211</width>
+        <width>200</width>
         <height>71</height>
        </rect>
       </property>
@@ -1176,27 +1179,6 @@ QPushButton:pressed {
        <string>CLEAR</string>
       </property>
      </widget>
-     <widget class="QLabel" name="label_2">
-      <property name="geometry">
-       <rect>
-        <x>390</x>
-        <y>40</y>
-        <width>241</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>16</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Available Cards:</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_3">
       <property name="geometry">
        <rect>
@@ -1234,7 +1216,10 @@ QPushButton:pressed {
        <pixmap>assets/bg_deck_screen.png</pixmap>
       </property>
      </widget>
-     <widget class="QLabel" name="card_chosen_1">
+     <widget class="QPushButton" name="btn_chosen_1">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>270</x>
@@ -1244,13 +1229,32 @@ QPushButton:pressed {
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+       <string notr="true">QPushButton:hover {
+    border: 2px solid red;
+    border-radius: 8px;
+}
+
+QPushButton:pressed {
+    border: none;
+}</string>
       </property>
       <property name="text">
        <string/>
       </property>
+      <property name="iconSize">
+       <size>
+        <width>80</width>
+        <height>110</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
      </widget>
-     <widget class="QLabel" name="card_chosen_2">
+     <widget class="QPushButton" name="btn_chosen_2">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>370</x>
@@ -1260,13 +1264,32 @@ QPushButton:pressed {
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+       <string notr="true">QPushButton:hover {
+    border: 2px solid red;
+    border-radius: 8px;
+}
+
+QPushButton:pressed {
+    border: none;
+}</string>
       </property>
       <property name="text">
        <string/>
       </property>
+      <property name="iconSize">
+       <size>
+        <width>80</width>
+        <height>110</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
      </widget>
-     <widget class="QLabel" name="card_chosen_3">
+     <widget class="QPushButton" name="btn_chosen_3">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>470</x>
@@ -1276,13 +1299,32 @@ QPushButton:pressed {
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+       <string notr="true">QPushButton:hover {
+    border: 2px solid red;
+    border-radius: 8px;
+}
+
+QPushButton:pressed {
+    border: none;
+}</string>
       </property>
       <property name="text">
        <string/>
       </property>
+      <property name="iconSize">
+       <size>
+        <width>80</width>
+        <height>110</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
      </widget>
-     <widget class="QLabel" name="card_chosen_4">
+     <widget class="QPushButton" name="btn_chosen_4">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>570</x>
@@ -1292,13 +1334,32 @@ QPushButton:pressed {
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+       <string notr="true">QPushButton:hover {
+    border: 2px solid red;
+    border-radius: 8px;
+}
+
+QPushButton:pressed {
+    border: none;
+}</string>
       </property>
       <property name="text">
        <string/>
       </property>
+      <property name="iconSize">
+       <size>
+        <width>80</width>
+        <height>110</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
      </widget>
-     <widget class="QLabel" name="card_chosen_5">
+     <widget class="QPushButton" name="btn_chosen_5">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>670</x>
@@ -1308,13 +1369,32 @@ QPushButton:pressed {
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+       <string notr="true">QPushButton:hover {
+    border: 2px solid red;
+    border-radius: 8px;
+}
+
+QPushButton:pressed {
+    border: none;
+}</string>
       </property>
       <property name="text">
        <string/>
       </property>
+      <property name="iconSize">
+       <size>
+        <width>80</width>
+        <height>110</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
      </widget>
-     <widget class="QLabel" name="card_chosen_6">
+     <widget class="QPushButton" name="btn_chosen_6">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>270</x>
@@ -1324,13 +1404,32 @@ QPushButton:pressed {
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+       <string notr="true">QPushButton:hover {
+    border: 2px solid red;
+    border-radius: 8px;
+}
+
+QPushButton:pressed {
+    border: none;
+}</string>
       </property>
       <property name="text">
        <string/>
       </property>
+      <property name="iconSize">
+       <size>
+        <width>80</width>
+        <height>110</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
      </widget>
-     <widget class="QLabel" name="card_chosen_7">
+     <widget class="QPushButton" name="btn_chosen_7">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>370</x>
@@ -1340,13 +1439,32 @@ QPushButton:pressed {
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+       <string notr="true">QPushButton:hover {
+    border: 2px solid red;
+    border-radius: 8px;
+}
+
+QPushButton:pressed {
+    border: none;
+}</string>
       </property>
       <property name="text">
        <string/>
       </property>
+      <property name="iconSize">
+       <size>
+        <width>80</width>
+        <height>110</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
      </widget>
-     <widget class="QLabel" name="card_chosen_8">
+     <widget class="QPushButton" name="btn_chosen_8">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>470</x>
@@ -1356,13 +1474,32 @@ QPushButton:pressed {
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+       <string notr="true">QPushButton:hover {
+    border: 2px solid red;
+    border-radius: 8px;
+}
+
+QPushButton:pressed {
+    border: none;
+}</string>
       </property>
       <property name="text">
        <string/>
       </property>
+      <property name="iconSize">
+       <size>
+        <width>80</width>
+        <height>110</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
      </widget>
-     <widget class="QLabel" name="card_chosen_9">
+     <widget class="QPushButton" name="btn_chosen_9">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>570</x>
@@ -1372,13 +1509,32 @@ QPushButton:pressed {
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+       <string notr="true">QPushButton:hover {
+    border: 2px solid red;
+    border-radius: 8px;
+}
+
+QPushButton:pressed {
+    border: none;
+}</string>
       </property>
       <property name="text">
        <string/>
       </property>
+      <property name="iconSize">
+       <size>
+        <width>80</width>
+        <height>110</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
      </widget>
-     <widget class="QLabel" name="card_chosen_10">
+     <widget class="QPushButton" name="btn_chosen_10">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>670</x>
@@ -1388,10 +1544,47 @@ QPushButton:pressed {
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+       <string notr="true">QPushButton:hover {
+    border: 2px solid red;
+    border-radius: 8px;
+}
+
+QPushButton:pressed {
+    border: none;
+}</string>
       </property>
       <property name="text">
        <string/>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>80</width>
+        <height>110</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="geometry">
+       <rect>
+        <x>390</x>
+        <y>50</y>
+        <width>241</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Build your side deck:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
      <zorder>background</zorder>
@@ -1417,18 +1610,18 @@ QPushButton:pressed {
      <zorder>btn_card_dual_6</zorder>
      <zorder>btn_randomize</zorder>
      <zorder>btn_clear</zorder>
-     <zorder>label_2</zorder>
      <zorder>label_3</zorder>
-     <zorder>card_chosen_1</zorder>
-     <zorder>card_chosen_2</zorder>
-     <zorder>card_chosen_3</zorder>
-     <zorder>card_chosen_4</zorder>
-     <zorder>card_chosen_5</zorder>
-     <zorder>card_chosen_6</zorder>
-     <zorder>card_chosen_7</zorder>
-     <zorder>card_chosen_8</zorder>
-     <zorder>card_chosen_9</zorder>
-     <zorder>card_chosen_10</zorder>
+     <zorder>btn_chosen_1</zorder>
+     <zorder>btn_chosen_2</zorder>
+     <zorder>btn_chosen_3</zorder>
+     <zorder>btn_chosen_4</zorder>
+     <zorder>btn_chosen_5</zorder>
+     <zorder>btn_chosen_6</zorder>
+     <zorder>btn_chosen_7</zorder>
+     <zorder>btn_chosen_8</zorder>
+     <zorder>btn_chosen_9</zorder>
+     <zorder>btn_chosen_10</zorder>
+     <zorder>label_4</zorder>
     </widget>
     <widget class="QWidget" name="game_screen">
      <widget class="QLabel" name="card_player_1">

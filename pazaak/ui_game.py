@@ -105,25 +105,26 @@ class Ui_main_win(object):
         self.main_screen = QtWidgets.QWidget()
         self.main_screen.setObjectName("main_screen")
         self.name_pazaak = QtWidgets.QLabel(self.main_screen)
-        self.name_pazaak.setGeometry(QtCore.QRect(430, 20, 221, 81))
+        self.name_pazaak.setGeometry(QtCore.QRect(412, 30, 200, 81))
         font = QtGui.QFont()
         font.setPointSize(24)
         self.name_pazaak.setFont(font)
+        self.name_pazaak.setAlignment(QtCore.Qt.AlignCenter)
         self.name_pazaak.setObjectName("name_pazaak")
         self.btn_play = QtWidgets.QPushButton(self.main_screen)
-        self.btn_play.setGeometry(QtCore.QRect(360, 210, 211, 71))
+        self.btn_play.setGeometry(QtCore.QRect(412, 210, 200, 71))
         font = QtGui.QFont()
         font.setPointSize(20)
         self.btn_play.setFont(font)
         self.btn_play.setObjectName("btn_play")
         self.btn_help = QtWidgets.QPushButton(self.main_screen)
-        self.btn_help.setGeometry(QtCore.QRect(410, 310, 211, 71))
+        self.btn_help.setGeometry(QtCore.QRect(412, 310, 200, 71))
         font = QtGui.QFont()
         font.setPointSize(20)
         self.btn_help.setFont(font)
         self.btn_help.setObjectName("btn_help")
         self.btn_quit_game = QtWidgets.QPushButton(self.main_screen)
-        self.btn_quit_game.setGeometry(QtCore.QRect(520, 410, 211, 71))
+        self.btn_quit_game.setGeometry(QtCore.QRect(412, 410, 200, 71))
         font = QtGui.QFont()
         font.setPointSize(20)
         self.btn_quit_game.setFont(font)
@@ -511,13 +512,6 @@ class Ui_main_win(object):
         font.setWeight(75)
         self.btn_clear.setFont(font)
         self.btn_clear.setObjectName("btn_clear")
-        self.label_2 = QtWidgets.QLabel(self.deck_screen)
-        self.label_2.setGeometry(QtCore.QRect(390, 40, 241, 41))
-        font = QtGui.QFont()
-        font.setPointSize(16)
-        self.label_2.setFont(font)
-        self.label_2.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_2.setObjectName("label_2")
         self.label_3 = QtWidgets.QLabel(self.deck_screen)
         self.label_3.setGeometry(QtCore.QRect(390, 470, 241, 31))
         font = QtGui.QFont()
@@ -530,56 +524,163 @@ class Ui_main_win(object):
         self.background.setText("")
         self.background.setPixmap(QtGui.QPixmap("assets/bg_deck_screen.png"))
         self.background.setObjectName("background")
-        self.card_chosen_1 = QtWidgets.QLabel(self.deck_screen)
-        self.card_chosen_1.setGeometry(QtCore.QRect(270, 510, 82, 112))
-        self.card_chosen_1.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
-        self.card_chosen_1.setText("")
-        self.card_chosen_1.setObjectName("card_chosen_1")
-        self.card_chosen_2 = QtWidgets.QLabel(self.deck_screen)
-        self.card_chosen_2.setGeometry(QtCore.QRect(370, 510, 82, 112))
-        self.card_chosen_2.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
-        self.card_chosen_2.setText("")
-        self.card_chosen_2.setObjectName("card_chosen_2")
-        self.card_chosen_3 = QtWidgets.QLabel(self.deck_screen)
-        self.card_chosen_3.setGeometry(QtCore.QRect(470, 510, 82, 112))
-        self.card_chosen_3.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
-        self.card_chosen_3.setText("")
-        self.card_chosen_3.setObjectName("card_chosen_3")
-        self.card_chosen_4 = QtWidgets.QLabel(self.deck_screen)
-        self.card_chosen_4.setGeometry(QtCore.QRect(570, 510, 82, 112))
-        self.card_chosen_4.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
-        self.card_chosen_4.setText("")
-        self.card_chosen_4.setObjectName("card_chosen_4")
-        self.card_chosen_5 = QtWidgets.QLabel(self.deck_screen)
-        self.card_chosen_5.setGeometry(QtCore.QRect(670, 510, 82, 112))
-        self.card_chosen_5.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
-        self.card_chosen_5.setText("")
-        self.card_chosen_5.setObjectName("card_chosen_5")
-        self.card_chosen_6 = QtWidgets.QLabel(self.deck_screen)
-        self.card_chosen_6.setGeometry(QtCore.QRect(270, 630, 82, 112))
-        self.card_chosen_6.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
-        self.card_chosen_6.setText("")
-        self.card_chosen_6.setObjectName("card_chosen_6")
-        self.card_chosen_7 = QtWidgets.QLabel(self.deck_screen)
-        self.card_chosen_7.setGeometry(QtCore.QRect(370, 630, 82, 112))
-        self.card_chosen_7.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
-        self.card_chosen_7.setText("")
-        self.card_chosen_7.setObjectName("card_chosen_7")
-        self.card_chosen_8 = QtWidgets.QLabel(self.deck_screen)
-        self.card_chosen_8.setGeometry(QtCore.QRect(470, 630, 82, 112))
-        self.card_chosen_8.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
-        self.card_chosen_8.setText("")
-        self.card_chosen_8.setObjectName("card_chosen_8")
-        self.card_chosen_9 = QtWidgets.QLabel(self.deck_screen)
-        self.card_chosen_9.setGeometry(QtCore.QRect(570, 630, 82, 112))
-        self.card_chosen_9.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
-        self.card_chosen_9.setText("")
-        self.card_chosen_9.setObjectName("card_chosen_9")
-        self.card_chosen_10 = QtWidgets.QLabel(self.deck_screen)
-        self.card_chosen_10.setGeometry(QtCore.QRect(670, 630, 82, 112))
-        self.card_chosen_10.setStyleSheet("background-color: rgba(255, 255, 255, 0);")
-        self.card_chosen_10.setText("")
-        self.card_chosen_10.setObjectName("card_chosen_10")
+        self.btn_chosen_1 = QtWidgets.QPushButton(self.deck_screen)
+        self.btn_chosen_1.setEnabled(False)
+        self.btn_chosen_1.setGeometry(QtCore.QRect(270, 510, 82, 112))
+        self.btn_chosen_1.setStyleSheet("QPushButton:hover {\n"
+"    border: 2px solid red;\n"
+"    border-radius: 8px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    border: none;\n"
+"}")
+        self.btn_chosen_1.setText("")
+        self.btn_chosen_1.setIconSize(QtCore.QSize(80, 110))
+        self.btn_chosen_1.setFlat(True)
+        self.btn_chosen_1.setObjectName("btn_chosen_1")
+        self.btn_chosen_2 = QtWidgets.QPushButton(self.deck_screen)
+        self.btn_chosen_2.setEnabled(False)
+        self.btn_chosen_2.setGeometry(QtCore.QRect(370, 510, 82, 112))
+        self.btn_chosen_2.setStyleSheet("QPushButton:hover {\n"
+"    border: 2px solid red;\n"
+"    border-radius: 8px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    border: none;\n"
+"}")
+        self.btn_chosen_2.setText("")
+        self.btn_chosen_2.setIconSize(QtCore.QSize(80, 110))
+        self.btn_chosen_2.setFlat(True)
+        self.btn_chosen_2.setObjectName("btn_chosen_2")
+        self.btn_chosen_3 = QtWidgets.QPushButton(self.deck_screen)
+        self.btn_chosen_3.setEnabled(False)
+        self.btn_chosen_3.setGeometry(QtCore.QRect(470, 510, 82, 112))
+        self.btn_chosen_3.setStyleSheet("QPushButton:hover {\n"
+"    border: 2px solid red;\n"
+"    border-radius: 8px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    border: none;\n"
+"}")
+        self.btn_chosen_3.setText("")
+        self.btn_chosen_3.setIconSize(QtCore.QSize(80, 110))
+        self.btn_chosen_3.setFlat(True)
+        self.btn_chosen_3.setObjectName("btn_chosen_3")
+        self.btn_chosen_4 = QtWidgets.QPushButton(self.deck_screen)
+        self.btn_chosen_4.setEnabled(False)
+        self.btn_chosen_4.setGeometry(QtCore.QRect(570, 510, 82, 112))
+        self.btn_chosen_4.setStyleSheet("QPushButton:hover {\n"
+"    border: 2px solid red;\n"
+"    border-radius: 8px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    border: none;\n"
+"}")
+        self.btn_chosen_4.setText("")
+        self.btn_chosen_4.setIconSize(QtCore.QSize(80, 110))
+        self.btn_chosen_4.setFlat(True)
+        self.btn_chosen_4.setObjectName("btn_chosen_4")
+        self.btn_chosen_5 = QtWidgets.QPushButton(self.deck_screen)
+        self.btn_chosen_5.setEnabled(False)
+        self.btn_chosen_5.setGeometry(QtCore.QRect(670, 510, 82, 112))
+        self.btn_chosen_5.setStyleSheet("QPushButton:hover {\n"
+"    border: 2px solid red;\n"
+"    border-radius: 8px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    border: none;\n"
+"}")
+        self.btn_chosen_5.setText("")
+        self.btn_chosen_5.setIconSize(QtCore.QSize(80, 110))
+        self.btn_chosen_5.setFlat(True)
+        self.btn_chosen_5.setObjectName("btn_chosen_5")
+        self.btn_chosen_6 = QtWidgets.QPushButton(self.deck_screen)
+        self.btn_chosen_6.setEnabled(False)
+        self.btn_chosen_6.setGeometry(QtCore.QRect(270, 630, 82, 112))
+        self.btn_chosen_6.setStyleSheet("QPushButton:hover {\n"
+"    border: 2px solid red;\n"
+"    border-radius: 8px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    border: none;\n"
+"}")
+        self.btn_chosen_6.setText("")
+        self.btn_chosen_6.setIconSize(QtCore.QSize(80, 110))
+        self.btn_chosen_6.setFlat(True)
+        self.btn_chosen_6.setObjectName("btn_chosen_6")
+        self.btn_chosen_7 = QtWidgets.QPushButton(self.deck_screen)
+        self.btn_chosen_7.setEnabled(False)
+        self.btn_chosen_7.setGeometry(QtCore.QRect(370, 630, 82, 112))
+        self.btn_chosen_7.setStyleSheet("QPushButton:hover {\n"
+"    border: 2px solid red;\n"
+"    border-radius: 8px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    border: none;\n"
+"}")
+        self.btn_chosen_7.setText("")
+        self.btn_chosen_7.setIconSize(QtCore.QSize(80, 110))
+        self.btn_chosen_7.setFlat(True)
+        self.btn_chosen_7.setObjectName("btn_chosen_7")
+        self.btn_chosen_8 = QtWidgets.QPushButton(self.deck_screen)
+        self.btn_chosen_8.setEnabled(False)
+        self.btn_chosen_8.setGeometry(QtCore.QRect(470, 630, 82, 112))
+        self.btn_chosen_8.setStyleSheet("QPushButton:hover {\n"
+"    border: 2px solid red;\n"
+"    border-radius: 8px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    border: none;\n"
+"}")
+        self.btn_chosen_8.setText("")
+        self.btn_chosen_8.setIconSize(QtCore.QSize(80, 110))
+        self.btn_chosen_8.setFlat(True)
+        self.btn_chosen_8.setObjectName("btn_chosen_8")
+        self.btn_chosen_9 = QtWidgets.QPushButton(self.deck_screen)
+        self.btn_chosen_9.setEnabled(False)
+        self.btn_chosen_9.setGeometry(QtCore.QRect(570, 630, 82, 112))
+        self.btn_chosen_9.setStyleSheet("QPushButton:hover {\n"
+"    border: 2px solid red;\n"
+"    border-radius: 8px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    border: none;\n"
+"}")
+        self.btn_chosen_9.setText("")
+        self.btn_chosen_9.setIconSize(QtCore.QSize(80, 110))
+        self.btn_chosen_9.setFlat(True)
+        self.btn_chosen_9.setObjectName("btn_chosen_9")
+        self.btn_chosen_10 = QtWidgets.QPushButton(self.deck_screen)
+        self.btn_chosen_10.setEnabled(False)
+        self.btn_chosen_10.setGeometry(QtCore.QRect(670, 630, 82, 112))
+        self.btn_chosen_10.setStyleSheet("QPushButton:hover {\n"
+"    border: 2px solid red;\n"
+"    border-radius: 8px;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    border: none;\n"
+"}")
+        self.btn_chosen_10.setText("")
+        self.btn_chosen_10.setIconSize(QtCore.QSize(80, 110))
+        self.btn_chosen_10.setFlat(True)
+        self.btn_chosen_10.setObjectName("btn_chosen_10")
+        self.label_4 = QtWidgets.QLabel(self.deck_screen)
+        self.label_4.setGeometry(QtCore.QRect(390, 50, 241, 31))
+        font = QtGui.QFont()
+        font.setPointSize(16)
+        self.label_4.setFont(font)
+        self.label_4.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_4.setObjectName("label_4")
         self.background.raise_()
         self.btn_start_match.raise_()
         self.btn_deck_to_main.raise_()
@@ -603,18 +704,18 @@ class Ui_main_win(object):
         self.btn_card_dual_6.raise_()
         self.btn_randomize.raise_()
         self.btn_clear.raise_()
-        self.label_2.raise_()
         self.label_3.raise_()
-        self.card_chosen_1.raise_()
-        self.card_chosen_2.raise_()
-        self.card_chosen_3.raise_()
-        self.card_chosen_4.raise_()
-        self.card_chosen_5.raise_()
-        self.card_chosen_6.raise_()
-        self.card_chosen_7.raise_()
-        self.card_chosen_8.raise_()
-        self.card_chosen_9.raise_()
-        self.card_chosen_10.raise_()
+        self.btn_chosen_1.raise_()
+        self.btn_chosen_2.raise_()
+        self.btn_chosen_3.raise_()
+        self.btn_chosen_4.raise_()
+        self.btn_chosen_5.raise_()
+        self.btn_chosen_6.raise_()
+        self.btn_chosen_7.raise_()
+        self.btn_chosen_8.raise_()
+        self.btn_chosen_9.raise_()
+        self.btn_chosen_10.raise_()
+        self.label_4.raise_()
         self.stacked_widget.addWidget(self.deck_screen)
         self.game_screen = QtWidgets.QWidget()
         self.game_screen.setObjectName("game_screen")
@@ -899,8 +1000,8 @@ class Ui_main_win(object):
         self.btn_deck_to_main.setText(_translate("main_win", "BACK TO MENU"))
         self.btn_randomize.setText(_translate("main_win", "RANDOMIZE"))
         self.btn_clear.setText(_translate("main_win", "CLEAR"))
-        self.label_2.setText(_translate("main_win", "Available Cards:"))
         self.label_3.setText(_translate("main_win", "Chosen Cards:"))
+        self.label_4.setText(_translate("main_win", "Build your side deck:"))
         self.btn_end_turn.setText(_translate("main_win", "END TURN"))
         self.btn_stand.setText(_translate("main_win", "STAND"))
         self.btn_quit_match.setText(_translate("main_win", "QUIT MATCH"))

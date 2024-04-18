@@ -9,6 +9,7 @@ from ui_game import Ui_main_win
 
 
 MODS = ['+', '-', '-/+']
+MOD_DICT = {'plus': '+', 'minus': '-', 'dual': '-/+'}
 
 
 class Card:
@@ -51,20 +52,45 @@ class Competitor:
         self.is_standing = is_standing
 
 
-class Game:
-    side_deck = []
+class DeckBuilder:
+    chosen_cards = []
 
     @classmethod
-    def add_to_side_deck(cls):
-        button_name = ui.sender().objectName()
-        print('[Debug LOG] Button pressed:', button_name)
-
-    @classmethod
-    def gen_random_side_deck(cls):
+    def gen_random_deck(cls):
         ...
+    
+    @classmethod
+    def modify_deck(cls, card_buttons):
+        button_name = ui.sender().objectName()
+        mod, num = button_name.split('_')[-2:]
+        mod = MOD_DICT[mod]
+        card_value = mod + num
+
+        print(card_buttons)
+
+        if 'card' in button_name and len(cls.chosen_cards) < 10:
+            cls.chosen_cards.append({'button': button_name,
+                                     'card_value': card_value})
+            for button in ui.chosen_card_buttons:
+                if not button.isEnabled():
+                    # Enable it.
+                    # Set its icon.
+                    break
+        elif 'chosen' in button_name:
+            for item in cls.chosen_cards:
+                if item['button'] == button_name:
+                    cls.chosen_cards.remove(item)
+                    break
+            # TODO: Disable button based on the ui.sender()
+            # Remove its icon.
+            # Disable it.
+
+
+class Game:
+    main_deck = []
 
     @classmethod
-    def get_main_deck(cls, repetitions: int = 8) -> None:
+    def gen_main_deck(cls, repetitions: int = 8) -> None:
         """Generate a list of cards representing the house's deck.
 
         The optional parameter 'repetitions' shuffles it that many times.
@@ -95,17 +121,24 @@ class Pazaak(QtWidgets.QMainWindow):
         self.ui.btn_start_match.clicked.connect(self.start_match)
         self.ui.btn_quit_match.clicked.connect(self.go_to_main)
 
-        card_buttons = [self.ui.btn_card_plus_1, self.ui.btn_card_plus_2,
-                        self.ui.btn_card_plus_3, self.ui.btn_card_plus_4,
-                        self.ui.btn_card_plus_5, self.ui.btn_card_plus_6,
-                        self.ui.btn_card_minus_1, self.ui.btn_card_minus_2,
-                        self.ui.btn_card_minus_3, self.ui.btn_card_minus_4,
-                        self.ui.btn_card_minus_5, self.ui.btn_card_minus_6,
-                        self.ui.btn_card_dual_1, self.ui.btn_card_dual_2,
-                        self.ui.btn_card_dual_3, self.ui.btn_card_dual_4,
-                        self.ui.btn_card_dual_5, self.ui.btn_card_dual_6]
-        for button in card_buttons:
-            button.clicked.connect(Game.add_to_side_deck)
+        available_card_buttons = [self.ui.btn_card_plus_1, self.ui.btn_card_plus_2,
+                                  self.ui.btn_card_plus_3, self.ui.btn_card_plus_4,
+                                  self.ui.btn_card_plus_5, self.ui.btn_card_plus_6,
+                                  self.ui.btn_card_minus_1, self.ui.btn_card_minus_2,
+                                  self.ui.btn_card_minus_3, self.ui.btn_card_minus_4,
+                                  self.ui.btn_card_minus_5, self.ui.btn_card_minus_6,
+                                  self.ui.btn_card_dual_1, self.ui.btn_card_dual_2,
+                                  self.ui.btn_card_dual_3, self.ui.btn_card_dual_4,
+                                  self.ui.btn_card_dual_5, self.ui.btn_card_dual_6]
+        self.chosen_card_buttons = [self.ui.btn_chosen_1, self.ui.btn_chosen_2,
+                                    self.ui.btn_chosen_3, self.ui.btn_chosen_4,
+                                    self.ui.btn_chosen_5, self.ui.btn_chosen_6,
+                                    self.ui.btn_chosen_7, self.ui.btn_chosen_8,
+                                    self.ui.btn_chosen_9, self.ui.btn_chosen_10]
+        for btn in available_card_buttons:
+            btn.clicked.connect(DeckBuilder.modify_deck)
+        for btn in self.chosen_card_buttons:
+            btn.clicked.connect(DeckBuilder.modify_deck)
     
     def go_to_help(self):
         self.ui.stacked_widget.setCurrentIndex(1)
@@ -115,6 +148,10 @@ class Pazaak(QtWidgets.QMainWindow):
 
     def play(self):
         # TODO: Logic for starting a new game from the main menu.
+        # - reset deck builder:
+        #   - disable start button
+        #   - disable chosen cards buttons (and clear their pixmaps)
+        #   - empty the chosen cards list (call the same function that the clear button uses)
         self.ui.stacked_widget.setCurrentIndex(2)
 
     def start_match(self):
