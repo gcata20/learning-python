@@ -153,6 +153,7 @@ class Ui_main_win(object):
         self.deck_screen = QtWidgets.QWidget()
         self.deck_screen.setObjectName("deck_screen")
         self.btn_start_match = QtWidgets.QPushButton(self.deck_screen)
+        self.btn_start_match.setEnabled(False)
         self.btn_start_match.setGeometry(QtCore.QRect(830, 20, 161, 41))
         font = QtGui.QFont()
         font.setFamily("Arial")
