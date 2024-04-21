@@ -48,10 +48,10 @@ class Card:
 
     def set_icon(self):
         if self.current_mod == '+':
-            temp = 'pm'
+            dual_mod_text = 'pm'
         else:
-            temp = 'mp'
-        self.icon_path = f'assets/card_{temp}_{self.num}.png'
+            dual_mod_text = 'mp'
+        self.icon_path = f'assets/card_{dual_mod_text}_{self.num}.png'
 
 
 class Competitor:
@@ -62,6 +62,22 @@ class Competitor:
             ) -> None:
         self.name = name
         self.is_standing = is_standing
+        self.get_hand()
+    
+    def get_hand(self):
+        self.hand_cards = []
+        for _ in range(4):
+            if self.name == 'Player':
+                side_deck_card = choice(SideDeckManager.side_deck)
+                mod = side_deck_card[:-1]
+                num = side_deck_card[-1]
+            else:
+                mod = choice(MODS)
+                num = choice(VALUES)
+            new_card = Card(num, mod)
+            if self.name == 'Computer':
+                new_card.icon_path = 'assets/card_back.png'
+            self.hand_cards.append(new_card)
 
 
 class SideDeckManager:
@@ -144,6 +160,8 @@ class GameManager:
     @classmethod
     def start_match(cls):
         # TODO: Logic for starting a new match from the deck selection screen.
+        player = Competitor('Player')
+        computer = Competitor('Computer')
         main_win.ui.stacked_widget.setCurrentIndex(3)
 
 
