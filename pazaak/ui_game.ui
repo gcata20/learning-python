@@ -16,6 +16,12 @@
     <height>768</height>
    </size>
   </property>
+  <property name="sizeIncrement">
+   <size>
+    <width>1024</width>
+    <height>768</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>Pazaak</string>
   </property>
@@ -1598,9 +1604,6 @@ QPushButton:pressed {
       <property name="text">
        <string/>
       </property>
-      <property name="pixmap">
-       <pixmap>assets/card_back.png</pixmap>
-      </property>
       <property name="scaledContents">
        <bool>false</bool>
       </property>
@@ -1620,9 +1623,6 @@ QPushButton:pressed {
       <property name="text">
        <string/>
       </property>
-      <property name="pixmap">
-       <pixmap>assets/card_back.png</pixmap>
-      </property>
      </widget>
      <widget class="QLabel" name="computer_hand_3">
       <property name="geometry">
@@ -1639,9 +1639,6 @@ QPushButton:pressed {
       <property name="text">
        <string/>
       </property>
-      <property name="pixmap">
-       <pixmap>assets/card_back.png</pixmap>
-      </property>
      </widget>
      <widget class="QLabel" name="computer_hand_4">
       <property name="geometry">
@@ -1657,9 +1654,6 @@ QPushButton:pressed {
       </property>
       <property name="text">
        <string/>
-      </property>
-      <property name="pixmap">
-       <pixmap>assets/card_back.png</pixmap>
       </property>
      </widget>
      <widget class="QPushButton" name="btn_end_turn">
@@ -1735,7 +1729,7 @@ QPushButton:pressed {
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(255, 0, 0);</string>
+       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
       </property>
       <property name="text">
        <string/>
@@ -1803,7 +1797,7 @@ QPushButton:pressed {
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(255, 0, 0);</string>
+       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
       </property>
       <property name="text">
        <string/>
@@ -1819,7 +1813,7 @@ QPushButton:pressed {
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(255, 0, 0);</string>
+       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
       </property>
       <property name="text">
        <string/>
@@ -1835,7 +1829,7 @@ QPushButton:pressed {
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(255, 0, 0);</string>
+       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
       </property>
       <property name="text">
        <string/>
@@ -1854,7 +1848,7 @@ QPushButton:pressed {
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(255, 0, 0);</string>
+       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
       </property>
       <property name="text">
        <string/>
@@ -1873,7 +1867,7 @@ QPushButton:pressed {
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(255, 0, 0);</string>
+       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
       </property>
       <property name="text">
        <string/>
@@ -1943,7 +1937,7 @@ QPushButton:pressed {
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(130, 130, 130);</string>
+       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
       </property>
       <property name="text">
        <string/>
@@ -1959,7 +1953,7 @@ QPushButton:pressed {
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(130, 130, 130);</string>
+       <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
       </property>
       <property name="text">
        <string/>
