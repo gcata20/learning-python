@@ -839,7 +839,7 @@ class Ui_main_win(object):
         self.computer_turn.setObjectName("computer_turn")
         self.player_hand_flip_1 = QtWidgets.QPushButton(self.game_screen)
         self.player_hand_flip_1.setEnabled(False)
-        self.player_hand_flip_1.setGeometry(QtCore.QRect(100, 620, 32, 32))
+        self.player_hand_flip_1.setGeometry(QtCore.QRect(75, 620, 32, 32))
         self.player_hand_flip_1.setStyleSheet("QPushButton:hover {\n"
 "    border: 2px solid red;\n"
 "    border-radius: 2px;\n"
@@ -854,7 +854,7 @@ class Ui_main_win(object):
         self.player_hand_flip_1.setObjectName("player_hand_flip_1")
         self.player_hand_flip_2 = QtWidgets.QPushButton(self.game_screen)
         self.player_hand_flip_2.setEnabled(False)
-        self.player_hand_flip_2.setGeometry(QtCore.QRect(200, 620, 32, 32))
+        self.player_hand_flip_2.setGeometry(QtCore.QRect(175, 620, 32, 32))
         self.player_hand_flip_2.setStyleSheet("QPushButton:hover {\n"
 "    border: 2px solid red;\n"
 "    border-radius: 2px;\n"
@@ -869,7 +869,7 @@ class Ui_main_win(object):
         self.player_hand_flip_2.setObjectName("player_hand_flip_2")
         self.player_hand_flip_3 = QtWidgets.QPushButton(self.game_screen)
         self.player_hand_flip_3.setEnabled(False)
-        self.player_hand_flip_3.setGeometry(QtCore.QRect(300, 620, 32, 32))
+        self.player_hand_flip_3.setGeometry(QtCore.QRect(275, 620, 32, 32))
         self.player_hand_flip_3.setStyleSheet("QPushButton:hover {\n"
 "    border: 2px solid red;\n"
 "    border-radius: 2px;\n"
@@ -884,7 +884,7 @@ class Ui_main_win(object):
         self.player_hand_flip_3.setObjectName("player_hand_flip_3")
         self.player_hand_flip_4 = QtWidgets.QPushButton(self.game_screen)
         self.player_hand_flip_4.setEnabled(False)
-        self.player_hand_flip_4.setGeometry(QtCore.QRect(400, 620, 32, 32))
+        self.player_hand_flip_4.setGeometry(QtCore.QRect(375, 620, 32, 32))
         self.player_hand_flip_4.setStyleSheet("QPushButton:hover {\n"
 "    border: 2px solid red;\n"
 "    border-radius: 2px;\n"

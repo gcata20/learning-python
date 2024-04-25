@@ -23,11 +23,13 @@ class Card:
         self.num = num
         self.mod = mod
         self.is_dual = is_dual
-        self.icon_path = f'assets/card_{MOD_DICT[mod]}_{num}.png'
+        self.img_path = f'assets/card_{MOD_DICT[mod]}_{num}.png'
         if mod == '-/+':
             self.is_dual = True
             self.current_mod = choice(MODS[:2])
-            self.set_icon()
+            self.set_img()
+        else:
+            self.current_mod = mod
 
     def __str__(self) -> str:
         s = 'Card: '
@@ -38,51 +40,20 @@ class Card:
             s += f' (Current Mod: {self.current_mod})'
         return s
 
-    def flip_mod():
+    def flip_mod(self):
         """Flip the current modifier on dual cards."""
-        sender: QtWidgets.QPushButton = main_win.sender()
-        sender_index = int(sender.objectName()[-1]) - 1
-        current_card: Card = MatchManager.player.hand_cards[sender_index]
-        if current_card.current_mod == '+':
-            current_card.current_mod = '-'
+        if self.current_mod == '+':
+            self.current_mod = '-'
         else:
-            current_card.current_mod = '+'
-        current_card.set_icon()
-        main_win.player_hand_buttons[sender_index].setIcon(QIcon(current_card.icon_path))
+            self.current_mod = '+'
+        self.set_img()
 
-    def set_icon(self):
+    def set_img(self):
         if self.current_mod == '+':
             dual_mod_text = 'pm'
         else:
             dual_mod_text = 'mp'
-        self.icon_path = f'assets/card_{dual_mod_text}_{self.num}.png'
-
-
-class Competitor:
-    def __init__(
-            self,
-            name: str,
-            current_total = 0,
-            is_standing = False
-            ) -> None:
-        self.name = name
-        self.current_total = current_total
-        self.is_standing = is_standing
-    
-    def get_hand(self):
-        self.hand_cards = []
-        for _ in range(4):
-            if self.name == 'player':
-                side_deck_card = choice(SideDeckManager.side_deck)
-                mod = side_deck_card[:-1]
-                num = side_deck_card[-1]
-            else:
-                mod = choice(MODS)
-                num = choice(VALUES)
-            new_card = Card(num, mod)
-            if self.name == 'computer':
-                new_card.icon_path = 'assets/card_back.png'
-            self.hand_cards.append(new_card)
+        self.img_path = f'assets/card_{dual_mod_text}_{self.num}.png'
 
 
 class SideDeckManager:
@@ -170,6 +141,22 @@ class GameManager:
 
 class MatchManager:
     main_deck = []
+    player_hand = [Card] * 4
+    player_has_played_card = False
+
+    @classmethod
+    def end_turn(cls):
+        # TODO: Disable all buttons to allow computer turn without interference?
+        cls.play_computer_turn()
+        ...
+
+    @classmethod
+    def flip_card(cls):
+        button_index = int(main_win.sender().objectName()[-1]) - 1
+        card_to_flip = cls.player_hand[button_index]
+        card_to_flip.flip_mod()
+        img_path = card_to_flip.img_path
+        main_win.player_hand_buttons[button_index].setIcon(QIcon(img_path))
 
     @classmethod
     def gen_main_deck(cls, repetitions: int = 8) -> None:
@@ -186,9 +173,17 @@ class MatchManager:
             shuffle(cls.main_deck)
     
     @classmethod
+    def get_hand(cls):
+        for i in range(4):
+            side_deck_card = choice(SideDeckManager.side_deck)
+            mod = side_deck_card[:-1]
+            num = side_deck_card[-1]
+            new_card = Card(num, mod)
+            cls.player_hand[i] = new_card
+
+    @classmethod
     def init_match(cls):
-        cls.player = Competitor('player')
-        cls.computer = Competitor('computer')
+        cls.get_hand()
         indicators = [main_win.ui.player_turn, main_win.ui.computer_turn,
                       main_win.ui.player_set_1, main_win.ui.player_set_2,
                       main_win.ui.player_set_3, main_win.ui.computer_set_1,
@@ -203,7 +198,6 @@ class MatchManager:
             label.setPixmap(QPixmap(img_path))
         for label in [main_win.ui.player_total, main_win.ui.computer_total]:
             label.setText('0')
-        cls.player.get_hand()
         player_card_buttons = [main_win.ui.player_hand_1,
                                main_win.ui.player_hand_2,
                                main_win.ui.player_hand_3,
@@ -214,22 +208,53 @@ class MatchManager:
                                main_win.ui.player_hand_flip_4]
         for index, button in enumerate(player_card_buttons):
             button.setEnabled(True)
-            button.setIcon(QIcon(cls.player.hand_cards[index].icon_path))
-            if cls.player.hand_cards[index].is_dual:
+            button.setIcon(QIcon(cls.player_hand[index].img_path))
+            if cls.player_hand[index].is_dual:
                 player_flip_buttons[index].setEnabled(True)
                 player_flip_buttons[index].setIcon(QIcon('assets/flip.png'))
-        cls.computer.get_hand()
+            else:
+                player_flip_buttons[index].setIcon(QIcon())
+                player_flip_buttons[index].setEnabled(False)
         computer_card_labels = [main_win.ui.computer_hand_1,
                                 main_win.ui.computer_hand_2,
                                 main_win.ui.computer_hand_3,
                                 main_win.ui.computer_hand_4]
         for label in computer_card_labels:
             label.setPixmap(QPixmap('assets/card_back.png'))
-    
+        for label in main_win.player_slots:
+            label.setPixmap(QPixmap())
+            label.setEnabled(False)
+        cls.player_has_played_card = False
+
+    @classmethod
     def play_card(cls):
+        if cls.player_has_played_card:
+            return
         button_index = int(main_win.sender().objectName()[-1]) - 1
-        print(button_index)
-        # TODO: ........................
+        card_to_play = cls.player_hand[button_index]
+        main_win.player_hand_buttons[button_index].setIcon(QIcon())
+        main_win.player_hand_buttons[button_index].setEnabled(False)
+        if card_to_play.is_dual:
+            main_win.player_card_flip_buttons[button_index].setIcon(QIcon())
+            main_win.player_card_flip_buttons[button_index].setEnabled(False)
+        for slot in main_win.player_slots:
+            if not slot.isEnabled():
+                slot.setEnabled(True)
+                slot.setPixmap(QPixmap(card_to_play.img_path))
+                break
+        current_total = int(main_win.ui.player_total.text())
+        card_num = int(card_to_play.num)
+        if card_to_play.current_mod == '+':
+            new_total = current_total + card_num
+        else:
+            new_total = current_total - card_num
+        main_win.ui.player_total.setText(str(new_total))
+        cls.player_hand[button_index] = None
+        cls.player_has_played_card = True
+
+    @classmethod
+    def play_computer_turn(cls):
+        ...
 
 
 class Pazaak(QtWidgets.QMainWindow):
@@ -274,6 +299,7 @@ class Pazaak(QtWidgets.QMainWindow):
             btn.clicked.connect(SideDeckManager.modify_deck)
         
         # Game screen buttons.
+        self.ui.btn_end_turn.clicked.connect(MatchManager.end_turn)
         self.ui.btn_quit_match.clicked.connect(GameManager.go_to_main)
         self.player_hand_buttons = [self.ui.player_hand_1,
                                     self.ui.player_hand_2,
@@ -281,12 +307,19 @@ class Pazaak(QtWidgets.QMainWindow):
                                     self.ui.player_hand_4]
         for btn in self.player_hand_buttons:
             btn.clicked.connect(MatchManager.play_card)
-        player_card_flip_buttons = [self.ui.player_hand_flip_1,
-                                    self.ui.player_hand_flip_2,
-                                    self.ui.player_hand_flip_3,
-                                    self.ui.player_hand_flip_4]
-        for btn in player_card_flip_buttons:
-            btn.clicked.connect(Card.flip_mod)
+        self.player_card_flip_buttons = [self.ui.player_hand_flip_1,
+                                         self.ui.player_hand_flip_2,
+                                         self.ui.player_hand_flip_3,
+                                         self.ui.player_hand_flip_4]
+        for btn in self.player_card_flip_buttons:
+            btn.clicked.connect(MatchManager.flip_card)
+
+        # Game screen card slots.
+        self.player_slots = [self.ui.player_slot_1, self.ui.player_slot_2,
+                             self.ui.player_slot_3, self.ui.player_slot_4,
+                             self.ui.player_slot_5, self.ui.player_slot_6,
+                             self.ui.player_slot_7, self.ui.player_slot_8,
+                             self.ui.player_slot_9]
 
 
 if __name__ == '__main__':
