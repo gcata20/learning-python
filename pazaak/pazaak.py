@@ -63,11 +63,14 @@ class Competitor:
         self.has_played_card = False
         self.is_standing = False
         self.hand_cards = [None] * 4
+        self.sets_won = 0
         self.generate_hand()
     
     def generate_hand(self):
+        for _ in range(8):
+            shuffle(SideDeckManager.side_deck)
         for i in range(4):
-            side_deck_card = choice(SideDeckManager.side_deck)
+            side_deck_card = SideDeckManager.side_deck.pop()
             mod = side_deck_card[:-1]
             num = side_deck_card[-1]
             new_card = Card(num, mod)
@@ -144,6 +147,7 @@ class GameManager:
     
     @classmethod
     def go_to_main(cls):
+        main_win.ui.popup_match_status.hide()
         main_win.ui.stacked_widget.setCurrentIndex(0)
 
     @classmethod
@@ -160,17 +164,57 @@ class GameManager:
 class MatchManager:
     main_deck = []
     player_hand = [Card] * 4
+    set_is_over = False
+    match_is_over = False
+
+    @classmethod
+    def check_end_conditions(cls):
+        player_total = int(main_win.ui.player_total.text())
+        computer_total = int(main_win.ui.computer_total.text())
+        
+        if player_total > 20:
+            cls.set_is_over = True
+            cls.computer.sets_won += 1
+            main_win.ui.text_info_set.setText('You lost the set.')
+        elif cls.computer.is_standing and computer_total > 20:
+            cls.set_is_over = True
+            cls.player.sets_won += 1
+            main_win.ui.text_info_set.setText('You won the set.')
+        elif cls.player.is_standing and cls.computer.is_standing:
+            if player_total == computer_total:
+                cls.set_is_over = True
+                main_win.ui.text_info_set.setText('The set is a draw.')
+            elif player_total > computer_total:
+                cls.set_is_over = True
+                cls.player.sets_won += 1
+                main_win.ui.text_info_set.setText('You won the set.')
+            elif player_total < computer_total:
+                cls.set_is_over = True
+                cls.computer.sets_won += 1
+                main_win.ui.text_info_set.setText('You lost the set.')
+
+        if cls.player.sets_won == 3:
+            cls.match_is_over = True
+            main_win.ui.text_info_match.setText('You won the match.')
+        elif cls.computer.sets_won == 3:
+            cls.match_is_over = True
+            main_win.ui.text_info_match.setText('You lost the match.')
+            
+        if cls.match_is_over:
+            QtCore.QTimer.singleShot(800, cls.show_match_status)
+        elif cls.set_is_over:
+            QtCore.QTimer.singleShot(800, cls.show_set_status)
 
     @classmethod
     def end_turn(cls):
-        # TODO: Disable all buttons to allow computer turn without any interference?
-        player_total = int(main_win.ui.player_total.text())
-        if player_total > 20:
-            main_win.ui.text_info_set.setText('You lost the set.')
-            main_win.ui.popup_set_status.show()
+        cls.toggle_buttons(False)
+        cls.check_end_conditions()
+        if cls.set_is_over or cls.match_is_over:
             return
-        QtCore.QTimer.singleShot(200, cls.start_computer_turn)
-        # cls.start_computer_turn()
+        if not cls.computer.is_standing:
+            QtCore.QTimer.singleShot(100, cls.run_computer_turn)
+        else:
+            cls.run_player_turn()
 
     @classmethod
     def flip_card(cls):
@@ -196,14 +240,12 @@ class MatchManager:
     
     @classmethod
     def init_match(cls):
+        main_win.ui.popup_set_status.hide()
+        cls.match_is_over = False
         cls.player = Competitor('player')
         cls.computer = Competitor('computer')
-        cls.gen_main_deck()
-        cls.start_set()
 
-    @classmethod
-    def init_table(cls):
-    # Reset turn, set and total value indicators.
+        # Reset turn, set and total value indicators.
         indicators = [main_win.ui.player_turn, main_win.ui.computer_turn,
                       main_win.ui.player_set_1, main_win.ui.player_set_2,
                       main_win.ui.player_set_3, main_win.ui.computer_set_1,
@@ -245,12 +287,18 @@ class MatchManager:
                                 main_win.ui.computer_hand_4]
         for label in computer_card_labels:
             label.setPixmap(QPixmap('assets/card_back.png'))
+        
+        cls.gen_main_deck()
+        cls.start_set()
 
-        # Reset player and computer table card slots.
+    @classmethod
+    def init_table(cls):
         table_slots = main_win.player_table_slots + main_win.comp_table_slots
         for label in table_slots:
             label.setPixmap(QPixmap())
             label.setEnabled(False)
+        for label in [main_win.ui.player_total, main_win.ui.computer_total]:
+            label.setText('0')
 
     @classmethod
     def play_card(cls):
@@ -277,10 +325,15 @@ class MatchManager:
         main_win.ui.player_total.setText(str(new_total))
         cls.player.hand_cards[button_index] = None
         cls.player.has_played_card = True
+        if new_total == 20:
+            cls.stand()
+        elif main_win.player_table_slots[8].isEnabled():
+            cls.stand()
 
     @classmethod
-    def start_computer_turn(cls):
+    def run_computer_turn(cls):
         if not cls.computer.is_standing:
+            cls.update_turn_ui(False)
             drawn_card_value = cls.main_deck.pop()
             img_path = f'assets/card_base_{drawn_card_value}.png'
             for slot in main_win.comp_table_slots:
@@ -291,13 +344,37 @@ class MatchManager:
             current_total = int(main_win.ui.computer_total.text())
             new_total = current_total + drawn_card_value
             main_win.ui.computer_total.setText(str(new_total))
-        QtCore.QTimer.singleShot(800, cls.start_player_turn)
-        # cls.start_player_turn()
+
+            # TODO: ADD MORE LOGIC TO PLAY CARDS HERE DEPENDING ON TOTAL VALUE AND HAND CARDS (FOR COMPUTER).
+            player_total = int(main_win.ui.player_total.text())
+            if main_win.comp_table_slots[8].isEnabled():
+                cls.computer.is_standing = True
+            elif cls.player.is_standing:
+                if player_total < new_total < 21:
+                    cls.computer.is_standing = True
+                elif player_total >= 17 and player_total == new_total:
+                    cls.computer.is_standing = True
+                elif player_total == 20:
+                    pass
+            elif 17 <= new_total < 21:
+                cls.computer.is_standing = True
+
+            # Temporary line to stop computer from drawing cards forever. :D
+            # TODO: Replace with hand_card logic that tries to subtract from totals over 20.
+            if new_total > 20:
+                cls.computer.is_standing = True
+        print('[DEBUG LOG] computer standing status:', cls.computer.is_standing)
+        cls.check_end_conditions()
+        if cls.set_is_over or cls.match_is_over:
+            return
+        QtCore.QTimer.singleShot(1000, cls.run_player_turn)
 
     @classmethod
-    def start_player_turn(cls):
+    def run_player_turn(cls):
         cls.player.has_played_card = False
         if not cls.player.is_standing:
+            cls.update_turn_ui(True)
+            cls.toggle_buttons(True)
             drawn_card_value = cls.main_deck.pop()
             img_path = f'assets/card_base_{drawn_card_value}.png'
             for slot in main_win.player_table_slots:
@@ -308,14 +385,68 @@ class MatchManager:
             current_total = int(main_win.ui.player_total.text())
             new_total = current_total + drawn_card_value
             main_win.ui.player_total.setText(str(new_total))
+            if new_total == 20:
+                cls.stand()
+            elif main_win.player_table_slots[8].isEnabled():
+                cls.stand()
+        else:
+            QtCore.QTimer.singleShot(100, cls.run_computer_turn)
+    
+    @classmethod
+    def show_match_status(cls):
+        cls.update_set_ui()
+        main_win.ui.popup_match_status.show()
+    
+    @classmethod
+    def show_set_status(cls):
+        cls.update_set_ui()
+        main_win.ui.popup_set_status.show()
+
+    @classmethod
+    def stand(cls):
+        cls.player.is_standing = True
+        cls.end_turn()
     
     @classmethod
     def start_set(cls):
+        main_win.ui.popup_set_status.hide()
         cls.init_table()
-        QtCore.QTimer.singleShot(500, cls.start_player_turn)
-        # cls.start_player_turn()
+        cls.set_is_over = False
+        cls.player.is_standing = False
+        cls.computer.is_standing = False
+        QtCore.QTimer.singleShot(500, cls.run_player_turn)
 
+    @classmethod
+    def toggle_buttons(cls, new_state: bool):
+        for button in main_win.game_buttons:
+            button.setEnabled(new_state)
+        for i, button in enumerate(main_win.player_hand_buttons):
+            if cls.player.hand_cards[i]:
+                button.setEnabled(new_state)
+        for i, button in enumerate(main_win.player_card_flip_buttons):
+            if cls.player.hand_cards[i] and cls.player.hand_cards[i].is_dual:
+                button.setEnabled(new_state)
 
+    @classmethod
+    def update_set_ui(cls):
+        img_path = 'assets/set_active.png'
+        if cls.player.sets_won > 0:
+            index = cls.player.sets_won - 1
+            main_win.player_set_indicators[index].setPixmap(QPixmap(img_path))
+        if cls.computer.sets_won > 0:
+            index = cls.computer.sets_won - 1
+            main_win.comp_set_indicators[index].setPixmap(QPixmap(img_path))
+
+    @classmethod
+    def update_turn_ui(cls, is_players_turn: bool):
+        active_img_path = 'assets/turn_active.png'
+        inactive_img_path = 'assets/turn_inactive.png'
+        if is_players_turn:
+            main_win.ui.computer_turn.setPixmap(QPixmap(inactive_img_path))
+            main_win.ui.player_turn.setPixmap(QPixmap(active_img_path))
+        else:
+            main_win.ui.player_turn.setPixmap(QPixmap(inactive_img_path))
+            main_win.ui.computer_turn.setPixmap(QPixmap(active_img_path))
 
 
 class Pazaak(QtWidgets.QMainWindow):
@@ -364,7 +495,13 @@ class Pazaak(QtWidgets.QMainWindow):
         
         # Game screen buttons.
         self.ui.btn_end_turn.clicked.connect(MatchManager.end_turn)
+        self.ui.btn_stand.clicked.connect(MatchManager.stand)
         self.ui.btn_quit_match.clicked.connect(GameManager.go_to_main)
+
+        self.game_buttons = [self.ui.btn_end_turn,
+                             self.ui.btn_stand,
+                             self.ui.btn_quit_match]
+
         self.player_hand_buttons = [self.ui.player_hand_1,
                                     self.ui.player_hand_2,
                                     self.ui.player_hand_3,
@@ -398,9 +535,17 @@ class Pazaak(QtWidgets.QMainWindow):
                                  self.ui.computer_slot_8,
                                  self.ui.computer_slot_9]
 
+        # Game screen set indicators.
+        self.player_set_indicators = [self.ui.player_set_1,
+                                      self.ui.player_set_2,
+                                      self.ui.player_set_3]
+        self.comp_set_indicators = [self.ui.computer_set_1,
+                                    self.ui.computer_set_2,
+                                    self.ui.computer_set_3]
+
         # Set and match popups.
-        # self.ui.btn_ok_set.clicked.connect()
-        # self.ui.btn_ok_match.clicked.connect()
+        self.ui.btn_ok_set.clicked.connect(MatchManager.start_set)
+        self.ui.btn_ok_match.clicked.connect(GameManager.go_to_main)
 
 
 if __name__ == '__main__':
