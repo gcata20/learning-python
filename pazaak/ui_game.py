@@ -1117,6 +1117,9 @@ class Ui_main_win(object):
         self.computer_slot_8.raise_()
         self.computer_slot_9.raise_()
         self.stacked_widget.addWidget(self.game_screen)
+        self.stacked_widget.raise_()
+        self.popup_set_status.raise_()
+        self.popup_match_status.raise_()
         main_win.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(main_win)

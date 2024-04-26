@@ -56,6 +56,24 @@ class Card:
         self.img_path = f'assets/card_{dual_mod_text}_{self.num}.png'
 
 
+class Competitor:
+    def __init__(self, name: str) -> None:
+        self.name = name
+        self.total = 0
+        self.has_played_card = False
+        self.is_standing = False
+        self.hand_cards = [None] * 4
+        self.generate_hand()
+    
+    def generate_hand(self):
+        for i in range(4):
+            side_deck_card = choice(SideDeckManager.side_deck)
+            mod = side_deck_card[:-1]
+            num = side_deck_card[-1]
+            new_card = Card(num, mod)
+            self.hand_cards[i] = new_card
+
+
 class SideDeckManager:
     side_deck = [None] * 10
     deck_is_full = False
@@ -142,18 +160,22 @@ class GameManager:
 class MatchManager:
     main_deck = []
     player_hand = [Card] * 4
-    player_has_played_card = False
 
     @classmethod
     def end_turn(cls):
-        # TODO: Disable all buttons to allow computer turn without interference?
-        cls.play_computer_turn()
-        ...
+        # TODO: Disable all buttons to allow computer turn without any interference?
+        player_total = int(main_win.ui.player_total.text())
+        if player_total > 20:
+            main_win.ui.text_info_set.setText('You lost the set.')
+            main_win.ui.popup_set_status.show()
+            return
+        QtCore.QTimer.singleShot(200, cls.start_computer_turn)
+        # cls.start_computer_turn()
 
     @classmethod
     def flip_card(cls):
         button_index = int(main_win.sender().objectName()[-1]) - 1
-        card_to_flip = cls.player_hand[button_index]
+        card_to_flip = cls.player.hand_cards[button_index]
         card_to_flip.flip_mod()
         img_path = card_to_flip.img_path
         main_win.player_hand_buttons[button_index].setIcon(QIcon(img_path))
@@ -165,25 +187,23 @@ class MatchManager:
         The optional parameter 'repetitions' shuffles it that many times.
         """
 
-        cls.main_deck = []
+        cls.main_deck.clear()
         for n in range(10):
             for _ in range(4):
-                cls.main_deck.append(Card(n + 1))
+                cls.main_deck.append(n + 1)
         for _ in range(repetitions):
             shuffle(cls.main_deck)
     
     @classmethod
-    def get_hand(cls):
-        for i in range(4):
-            side_deck_card = choice(SideDeckManager.side_deck)
-            mod = side_deck_card[:-1]
-            num = side_deck_card[-1]
-            new_card = Card(num, mod)
-            cls.player_hand[i] = new_card
+    def init_match(cls):
+        cls.player = Competitor('player')
+        cls.computer = Competitor('computer')
+        cls.gen_main_deck()
+        cls.start_set()
 
     @classmethod
-    def init_match(cls):
-        cls.get_hand()
+    def init_table(cls):
+    # Reset turn, set and total value indicators.
         indicators = [main_win.ui.player_turn, main_win.ui.computer_turn,
                       main_win.ui.player_set_1, main_win.ui.player_set_2,
                       main_win.ui.player_set_3, main_win.ui.computer_set_1,
@@ -198,6 +218,8 @@ class MatchManager:
             label.setPixmap(QPixmap(img_path))
         for label in [main_win.ui.player_total, main_win.ui.computer_total]:
             label.setText('0')
+
+        # Initialize player's hand card images.
         player_card_buttons = [main_win.ui.player_hand_1,
                                main_win.ui.player_hand_2,
                                main_win.ui.player_hand_3,
@@ -208,36 +230,40 @@ class MatchManager:
                                main_win.ui.player_hand_flip_4]
         for index, button in enumerate(player_card_buttons):
             button.setEnabled(True)
-            button.setIcon(QIcon(cls.player_hand[index].img_path))
-            if cls.player_hand[index].is_dual:
+            button.setIcon(QIcon(cls.player.hand_cards[index].img_path))
+            if cls.player.hand_cards[index].is_dual:
                 player_flip_buttons[index].setEnabled(True)
                 player_flip_buttons[index].setIcon(QIcon('assets/flip.png'))
             else:
                 player_flip_buttons[index].setIcon(QIcon())
                 player_flip_buttons[index].setEnabled(False)
+
+        # Initialize computer's hand card images.
         computer_card_labels = [main_win.ui.computer_hand_1,
                                 main_win.ui.computer_hand_2,
                                 main_win.ui.computer_hand_3,
                                 main_win.ui.computer_hand_4]
         for label in computer_card_labels:
             label.setPixmap(QPixmap('assets/card_back.png'))
-        for label in main_win.player_slots:
+
+        # Reset player and computer table card slots.
+        table_slots = main_win.player_table_slots + main_win.comp_table_slots
+        for label in table_slots:
             label.setPixmap(QPixmap())
             label.setEnabled(False)
-        cls.player_has_played_card = False
 
     @classmethod
     def play_card(cls):
-        if cls.player_has_played_card:
+        if cls.player.has_played_card:
             return
         button_index = int(main_win.sender().objectName()[-1]) - 1
-        card_to_play = cls.player_hand[button_index]
+        card_to_play = cls.player.hand_cards[button_index]
         main_win.player_hand_buttons[button_index].setIcon(QIcon())
         main_win.player_hand_buttons[button_index].setEnabled(False)
         if card_to_play.is_dual:
             main_win.player_card_flip_buttons[button_index].setIcon(QIcon())
             main_win.player_card_flip_buttons[button_index].setEnabled(False)
-        for slot in main_win.player_slots:
+        for slot in main_win.player_table_slots:
             if not slot.isEnabled():
                 slot.setEnabled(True)
                 slot.setPixmap(QPixmap(card_to_play.img_path))
@@ -249,12 +275,47 @@ class MatchManager:
         else:
             new_total = current_total - card_num
         main_win.ui.player_total.setText(str(new_total))
-        cls.player_hand[button_index] = None
-        cls.player_has_played_card = True
+        cls.player.hand_cards[button_index] = None
+        cls.player.has_played_card = True
 
     @classmethod
-    def play_computer_turn(cls):
-        ...
+    def start_computer_turn(cls):
+        if not cls.computer.is_standing:
+            drawn_card_value = cls.main_deck.pop()
+            img_path = f'assets/card_base_{drawn_card_value}.png'
+            for slot in main_win.comp_table_slots:
+                if not slot.isEnabled():
+                    slot.setEnabled(True)
+                    slot.setPixmap(QPixmap(img_path))
+                    break
+            current_total = int(main_win.ui.computer_total.text())
+            new_total = current_total + drawn_card_value
+            main_win.ui.computer_total.setText(str(new_total))
+        QtCore.QTimer.singleShot(800, cls.start_player_turn)
+        # cls.start_player_turn()
+
+    @classmethod
+    def start_player_turn(cls):
+        cls.player.has_played_card = False
+        if not cls.player.is_standing:
+            drawn_card_value = cls.main_deck.pop()
+            img_path = f'assets/card_base_{drawn_card_value}.png'
+            for slot in main_win.player_table_slots:
+                if not slot.isEnabled():
+                    slot.setEnabled(True)
+                    slot.setPixmap(QPixmap(img_path))
+                    break
+            current_total = int(main_win.ui.player_total.text())
+            new_total = current_total + drawn_card_value
+            main_win.ui.player_total.setText(str(new_total))
+    
+    @classmethod
+    def start_set(cls):
+        cls.init_table()
+        QtCore.QTimer.singleShot(500, cls.start_player_turn)
+        # cls.start_player_turn()
+
+
 
 
 class Pazaak(QtWidgets.QMainWindow):
@@ -266,6 +327,9 @@ class Pazaak(QtWidgets.QMainWindow):
         self.setWindowIcon(QIcon('assets/app_icon.png'))
         self.ui = Ui_main_win()
         self.ui.setupUi(self)
+
+        self.ui.popup_match_status.hide()
+        self.ui.popup_set_status.hide()
 
         # Main menu screen buttons.
         self.ui.btn_play.clicked.connect(GameManager.play)
@@ -315,11 +379,28 @@ class Pazaak(QtWidgets.QMainWindow):
             btn.clicked.connect(MatchManager.flip_card)
 
         # Game screen card slots.
-        self.player_slots = [self.ui.player_slot_1, self.ui.player_slot_2,
-                             self.ui.player_slot_3, self.ui.player_slot_4,
-                             self.ui.player_slot_5, self.ui.player_slot_6,
-                             self.ui.player_slot_7, self.ui.player_slot_8,
-                             self.ui.player_slot_9]
+        self.player_table_slots = [self.ui.player_slot_1,
+                                   self.ui.player_slot_2,
+                                   self.ui.player_slot_3,
+                                   self.ui.player_slot_4,
+                                   self.ui.player_slot_5,
+                                   self.ui.player_slot_6,
+                                   self.ui.player_slot_7,
+                                   self.ui.player_slot_8,
+                                   self.ui.player_slot_9]
+        self.comp_table_slots = [self.ui.computer_slot_1,
+                                 self.ui.computer_slot_2,
+                                 self.ui.computer_slot_3,
+                                 self.ui.computer_slot_4,
+                                 self.ui.computer_slot_5,
+                                 self.ui.computer_slot_6,
+                                 self.ui.computer_slot_7,
+                                 self.ui.computer_slot_8,
+                                 self.ui.computer_slot_9]
+
+        # Set and match popups.
+        # self.ui.btn_ok_set.clicked.connect()
+        # self.ui.btn_ok_match.clicked.connect()
 
 
 if __name__ == '__main__':
