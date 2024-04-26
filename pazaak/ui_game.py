@@ -159,11 +159,13 @@ class Ui_main_win(object):
         self.btn_help_to_main.setFont(font)
         self.btn_help_to_main.setObjectName("btn_help_to_main")
         self.label = QtWidgets.QLabel(self.help_screen)
-        self.label.setGeometry(QtCore.QRect(330, 170, 351, 311))
+        self.label.setGeometry(QtCore.QRect(120, 70, 801, 671))
         font = QtGui.QFont()
-        font.setPointSize(24)
+        font.setPointSize(14)
+        font.setBold(False)
+        font.setWeight(50)
         self.label.setFont(font)
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.label.setWordWrap(True)
         self.label.setObjectName("label")
         self.stacked_widget.addWidget(self.help_screen)
@@ -1134,8 +1136,8 @@ class Ui_main_win(object):
         self.computer_slot_9.raise_()
         self.stacked_widget.addWidget(self.game_screen)
         self.stacked_widget.raise_()
-        self.popup_match_status.raise_()
         self.popup_set_status.raise_()
+        self.popup_match_status.raise_()
         main_win.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(main_win)
@@ -1154,7 +1156,28 @@ class Ui_main_win(object):
         self.btn_help.setText(_translate("main_win", "instructions"))
         self.btn_quit_game.setText(_translate("main_win", "exit"))
         self.btn_help_to_main.setText(_translate("main_win", "BACK"))
-        self.label.setText(_translate("main_win", "This screen will contain instructions on how to play the game."))
+        self.label.setText(_translate("main_win", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">Pazaak is a game similar to Blackjack.</span></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">- players must reach a total of 20 (or as close as possible) without going over</span></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">- the player with the higher total wins the set</span></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">- 3 sets win the match</span></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt;\"><br /></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">At the beginning of the match, you will choose 10 cards to add to your side deck. 4 of these cards will be randomly dealt to your hand. You may play cards from your hand to manipulate the total value on the table.</span></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">- you will only get one hand per match (make these cards last :)</span></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">- you may only play one hand card per turn</span></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">- dual cards (-/+) can be flipped to choose which action you want them to perform</span></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt;\"><br /></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">The game is turn based.</span></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">- players draw a card from the house\'s deck at the beginning of their turn</span></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">- then, they may choose to play a card from hand (or not, strategy is key ;)</span></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">- finally, they can do one of two things:</span></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">[1] end turn, to pass the turn to the opponent</span></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">- at the end of their turn, if the player has a total over 20, they automatically lose the set</span></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">[2] stand, if they\'re happy with the total value on their side of the table</span></p>\n"
+"<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:14pt;\">- if standing, they will not draw or play any additional cards during that set</span></p></body></html>"))
         self.btn_start_match.setText(_translate("main_win", "START MATCH"))
         self.btn_deck_to_main.setText(_translate("main_win", "BACK TO MENU"))
         self.btn_randomize.setText(_translate("main_win", "RANDOMIZE"))
