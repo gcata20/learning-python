@@ -288,7 +288,6 @@ class MatchManager:
         for label in computer_card_labels:
             label.setPixmap(QPixmap('assets/card_back.png'))
         
-        cls.gen_main_deck()
         cls.start_set()
 
     @classmethod
@@ -363,11 +362,16 @@ class MatchManager:
             # TODO: Replace with hand_card logic that tries to subtract from totals over 20.
             if new_total > 20:
                 cls.computer.is_standing = True
-        print('[DEBUG LOG] computer standing status:', cls.computer.is_standing)
+
+            if cls.computer.is_standing:
+                for item in main_win.comp_table_slots:
+                    item.setEnabled(False)
+
         cls.check_end_conditions()
         if cls.set_is_over or cls.match_is_over:
             return
         QtCore.QTimer.singleShot(1000, cls.run_player_turn)
+
 
     @classmethod
     def run_player_turn(cls):
@@ -405,11 +409,14 @@ class MatchManager:
     @classmethod
     def stand(cls):
         cls.player.is_standing = True
+        for item in main_win.player_table_slots:
+            item.setDisabled(True)
         cls.end_turn()
     
     @classmethod
     def start_set(cls):
         main_win.ui.popup_set_status.hide()
+        cls.gen_main_deck()
         cls.init_table()
         cls.set_is_over = False
         cls.player.is_standing = False
